@@ -68,7 +68,7 @@ class MyApp extends StatelessWidget {
       title: 'Node server demo',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.red,
       ),
       home: Scaffold(
         appBar: AppBar(title: Text('Flutter Client')),
@@ -89,7 +89,6 @@ class BodyWidgetState extends State<BodyWidget> {
  @override
  void initState() {
    super.initState();
-//    debugPrint(response.first.title);
  }
 
   @override
@@ -102,27 +101,6 @@ class BodyWidgetState extends State<BodyWidget> {
           return getStructuredGridCell(serverResponse[index]);
         }),
       ),
-      // child: Align(
-      //   alignment: Alignment.topCenter,
-      //   child: SizedBox(
-      //     width: 200,
-      //     child: Column(
-      //       crossAxisAlignment: CrossAxisAlignment.center,
-      //       children: <Widget>[
-      //         RaisedButton(
-      //           child: Text('Send request to server'),
-      //           onPressed: () {
-      //             _makeGetRequest();
-      //           },
-      //         ),
-      //         Padding(
-      //           padding: const EdgeInsets.all(8.0),
-      //           child: Text("Hello")//serverResponse.first.title),
-      //         ),
-      //       ],
-      //     ),
-      //   ),
-      // ),
     );
   }
   
@@ -160,25 +138,3 @@ Card getStructuredGridCell(Post post) {
         ],
       ));
 }
-
-/*
-以下動作確認用のmain関数
-
-void main() {
-
-  myfetchPost().then((resp)
-  {
-    print(resp.id);
-  }
-  );
-
-  final String send = ' {"deadline": "2019-06-11T14:00:00+09:00", "title": "report", "memo": "shoganai"} ';
-  my_Post_template payload = my_Post_template.fromJson(jsonDecode(send));
-  createPost("http://localhost:8080/api/v1/event", send ).then((resp)
-  {
-    print(resp);
-  }
-  );
-}
-*/
-
