@@ -1,13 +1,13 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io' show Platform;
 
 import 'package:flutter/material.dart';
+// import 'package:flutter_web/material.dart';
 import 'package:http/http.dart' as http;
 
-
 Future<Post> fetchPost() async {
-  final response =
-  await http.get('http://localhost:8080/api/v1/event/1');
+  final response = await http.get('http://localhost:8080/api/v1/event/1');
   print(response.body);
 
   if (response.statusCode == 200) {
@@ -35,10 +35,8 @@ Future<String> createPost(String url, String json_to_send) async{
   await http.post(url, body: json_to_send);
 
   if (response.statusCode == 200) {
-    return('ok');
-  }
-
-  else{
+    return ('ok');
+  } else {
     throw Exception('Failed to create a post');
   }
 }
@@ -61,7 +59,6 @@ class Post {
   }
 }
 
-
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
@@ -80,12 +77,14 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
 class BodyWidget extends StatefulWidget {
   @override
   BodyWidgetState createState() {
     return new BodyWidgetState();
   }
 }
+
 class BodyWidgetState extends State<BodyWidget> {
   List<String> serverResponse = ['Server Response', 'hi'];
   @override
@@ -115,6 +114,7 @@ class BodyWidgetState extends State<BodyWidget> {
       ),
     );
   }
+
   _makeGetRequest() async {
     String response = await fetchAllPost();
     List<String> my_jsons = response.split(',');
@@ -126,3 +126,23 @@ class BodyWidgetState extends State<BodyWidget> {
   }
 }
 
+/*
+以下動作確認用のmain関数
+
+void main() {
+
+  myfetchPost().then((resp)
+  {
+    print(resp.id);
+  }
+  );
+
+  final String send = ' {"deadline": "2019-06-11T14:00:00+09:00", "title": "report", "memo": "shoganai"} ';
+  my_Post_template payload = my_Post_template.fromJson(jsonDecode(send));
+  createPost("http://localhost:8080/api/v1/event", send ).then((resp)
+  {
+    print(resp);
+  }
+  );
+}
+*/
