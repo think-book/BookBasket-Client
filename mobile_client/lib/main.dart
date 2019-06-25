@@ -1,22 +1,31 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 
-Future<Post> fetchPost() async {
-  final response =
-  await http.get('http://localhost:8080/api/v1/event/1');
+Future<List<Post>> fetchPost() async {
+ final response = await http.get('http://localhost:8080/api/v1/event');
+  // final response = await http.get('http://d7ef45de.ngrok.io/api/v1/event');
   print(response.body);
 
   if (response.statusCode == 200) {
-    return Post.fromJson(jsonDecode(response.body));
+//    return Post.fromJson(jsonDecode(response.body));
+      return compute(parseData, response.body);
   } else {
     throw Exception('Failed to load post');
   }
 }
 
+// generate a list of posts about books from received json response
+List<Post> parseData(String responseBody){
+  var parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
+
+  List<Post> list = parsed.map<Post>((json) => new Post.fromJson(json)).toList() ;
+  return list;
+}
 
 Future<String> createPost(String url, String json_to_send) async{
   final response =
@@ -40,11 +49,11 @@ class Post {
   Post({this.id, this.title, this.memo});
 
   factory Post.fromJson(Map<String, dynamic> json) {
-    return Post(
-      id: json['id'],
+    return new Post(
+      id: json['id'] as int,
       //deadline: json['deadline'],
-      title: json['title'],
-      memo: json['memo'],
+      title: json['title'] as String,
+      memo: json['memo'] as String,
     );
   }
 }
@@ -75,42 +84,82 @@ class BodyWidget extends StatefulWidget {
   }
 }
 class BodyWidgetState extends State<BodyWidget> {
-  String serverResponse = 'Server response';
+  List<Post> serverResponse = [new Post(id: 1, title: "cool book", memo: "foo"), new Post(id: 2, title: "awesome book", memo: "bar")];
+
+ @override
+ void initState() {
+   super.initState();
+//    debugPrint(response.first.title);
+ }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(32.0),
-      child: Align(
-        alignment: Alignment.topCenter,
-        child: SizedBox(
-          width: 200,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              RaisedButton(
-                child: Text('Send request to server'),
-                onPressed: () {
-                  _makeGetRequest();
-                },
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(serverResponse),
-              ),
-            ],
-          ),
-        ),
+      padding: const EdgeInsets.all(22.0),
+      child: new GridView.count(
+        crossAxisCount: 2,
+        children: List.generate(serverResponse.length, (index) {
+          return getStructuredGridCell(serverResponse[index]);
+        }),
       ),
+      // child: Align(
+      //   alignment: Alignment.topCenter,
+      //   child: SizedBox(
+      //     width: 200,
+      //     child: Column(
+      //       crossAxisAlignment: CrossAxisAlignment.center,
+      //       children: <Widget>[
+      //         RaisedButton(
+      //           child: Text('Send request to server'),
+      //           onPressed: () {
+      //             _makeGetRequest();
+      //           },
+      //         ),
+      //         Padding(
+      //           padding: const EdgeInsets.all(8.0),
+      //           child: Text("Hello")//serverResponse.first.title),
+      //         ),
+      //       ],
+      //     ),
+      //   ),
+      // ),
     );
   }
+  
   _makeGetRequest() async {
-    Post response = await fetchPost();
+    List<Post> response = await fetchPost();
     setState(() {
-      serverResponse = response.memo;
+      serverResponse = response;
     });
   }
 }
 
+
+Card getStructuredGridCell(Post post) {
+  return new Card(
+      elevation: 1.5,
+      child: new Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisSize: MainAxisSize.min,
+        verticalDirection: VerticalDirection.down,
+        children: <Widget>[
+          // can add picture here
+          new Padding(
+            padding: EdgeInsets.only(left: 20.0, right: 20.0, top: 20),
+            child: new Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                // new Icon(Icons.book),
+                new Image(image: new AssetImage('res/img/book.png'), width: 80, height: 80,),
+//                new Text(post.id.toString()),
+                new Text(post.title, style: TextStyle(fontWeight: FontWeight.bold),),
+                 new Text("Memo: "+ post.memo),
+              ],
+            ),
+          )
+        ],
+      ));
+}
 
 /*
 以下動作確認用のmain関数
