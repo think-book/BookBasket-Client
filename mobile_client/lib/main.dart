@@ -17,8 +17,22 @@ Future<Post> fetchPost() async {
   }
 }
 
-Future<String> createPost(String url, String json_to_send) async {
-  final response = await http.post(url, body: json_to_send);
+Future<String> fetchAllPost() async{
+  final response =
+  await http.get('http://localhost:8080/api/v1/event');
+  int i = 3;
+  if (response.statusCode == 200) {
+    return (response.body);
+  } else {
+    throw Exception('Failed to load post');
+  }
+
+}
+
+
+Future<String> createPost(String url, String json_to_send) async{
+  final response =
+  await http.post(url, body: json_to_send);
 
   if (response.statusCode == 200) {
     return ('ok');
@@ -72,7 +86,7 @@ class BodyWidget extends StatefulWidget {
 }
 
 class BodyWidgetState extends State<BodyWidget> {
-  String serverResponse = 'Server response';
+  List<String> serverResponse = ['Server Response', 'hi'];
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -92,7 +106,7 @@ class BodyWidgetState extends State<BodyWidget> {
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Text(serverResponse),
+                child: Text(serverResponse[1]),
               ),
             ],
           ),
@@ -102,9 +116,12 @@ class BodyWidgetState extends State<BodyWidget> {
   }
 
   _makeGetRequest() async {
-    Post response = await fetchPost();
+    String response = await fetchAllPost();
+    List<String> my_jsons = response.split(',');
+    print(my_jsons);
+
     setState(() {
-      serverResponse = response.memo;
+      //serverResponse = response;
     });
   }
 }
