@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io' show Platform;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+// import 'package:flutter_web/material.dart';
 import 'package:http/http.dart' as http;
 
 // 6月25 方針転換（みよし） レスポンスを全てStringで受け取る→Json各々要素のリストにする。ただしこの時List<String>
