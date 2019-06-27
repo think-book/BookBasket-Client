@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+
 import 'dart:io' show Platform;
 
 import 'package:flutter/foundation.dart';
@@ -104,7 +105,7 @@ class BodyWidgetState extends State<BodyWidget> {
         crossAxisCount: 2,
         children: List.generate(serverResponse.length, (index) {
           return stringgetStructuredGridCell(
-              serverResponse[index].replaceAll(r'},', '}'));
+              context, serverResponse[index].replaceAll(r'},', '}'));
         }),
       ),
     );
@@ -118,7 +119,7 @@ class BodyWidgetState extends State<BodyWidget> {
   }
 }
 
-Card stringgetStructuredGridCell(String one_elm) {
+Card stringgetStructuredGridCell(BuildContext context, String one_elm) {
   return new Card(
       elevation: 1.5,
       child: new Column(
@@ -133,16 +134,18 @@ Card stringgetStructuredGridCell(String one_elm) {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 // new Icon(Icons.book),
-                new Image(
-                  image: new AssetImage('res/img/book.png'),
-                  width: 80,
-                  height: 80,
+                FlatButton(
+                  //icon: Icon(Icons.add_a_photo),
+                  child: (Image.asset('res/img/book.png')),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => DetailScreen(book_info: one_elm),
+                      ),
+                    );
+                  },
                 ),
-//                new Text(post.id.toString()),
-                // 各々の要素をPostクラスに変換した後titleに対応する要素を引っ張ってくる
-                // (正規表現でもいいですが、後で仕様が変わることを考えると
-                // Postクラスに変換した方がいい？
-                // というかここはできれば後でmain関数の外に出したい
                 new Text(
                   Post.fromJson(jsonDecode(one_elm)).title,
                   style: TextStyle(fontWeight: FontWeight.bold),
@@ -154,23 +157,28 @@ Card stringgetStructuredGridCell(String one_elm) {
       ));
 }
 
-/*
-以下動作確認用のmain関数の例
+class DetailScreen extends StatelessWidget {
+  // Declare a field that holds the Todo.
+  final String book_info;
 
-void main() {
+  // In the constructor, require a Todo.
+  DetailScreen({@required this.book_info});
 
-  myfetchPost().then((resp)
-  {
-    print(resp.id);
+  @override
+  Widget build(BuildContext context) {
+    // Use the Todo to create the UI.
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(Post.fromJson(jsonDecode(book_info)).title),
+      ),
+      body: Center(
+        child: RaisedButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          child: Text('Go back!'),
+        ),
+      ),
+    );
   }
-  );
-
-  final String send = ' {"deadline": "2019-06-11T14:00:00+09:00", "title": "report", "memo": "shoganai"} ';
-  my_Post_template payload = my_Post_template.fromJson(jsonDecode(send));
-  createPost("http://localhost:8080/api/v1/event", send ).then((resp)
-  {
-    print(resp);
-  }
-  );
 }
-*/
