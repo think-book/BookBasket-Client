@@ -11,4 +11,10 @@ void main(){
     } );
   });
 
+  test('Post object must be created.', () {
+    final post = Post();
+
+    expect(post != null, true);
+  });
+
 }
