@@ -1,54 +1,65 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io' show Platform;
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+// import 'package:flutter_web/material.dart';
 import 'package:http/http.dart' as http;
 
+// 6月25 方針転換（みよし） レスポンスを全てStringで受け取る→Json各々要素のリストにする。ただしこの時List<String>
+// →レンダリング時にStringをPostに変換してお好みの要素を取り出す
 
-Future<Post> fetchPost() async {
-  final response =
-  await http.get('http://localhost:8080/api/v1/event/1');
-  print(response.body);
-
+// ",\n"区切りでレスポンスのbodyは帰ってきてるみたい。
+// この仕様は変わる可能性が高いので、サーバーの仕様が変わったら適宜変更する。
+Future<List<String>> stringfetchPost() async {
+  final response = await http.get('http://localhost:8080/api/v1/event');
   if (response.statusCode == 200) {
-    return Post.fromJson(jsonDecode(response.body));
+//    return Post.fromJson(jsonDecode(response.body));
+    print(response.body);
+    return response.body.trim().split("\n");
   } else {
     throw Exception('Failed to load post');
   }
 }
 
+// generate a list of posts about books from received json response
+//　あとで使う（今はmain関数で変換する程度にしてるが処理が多くなるにつれ対応を考えなければならない。）
+/*
+List<Post> parseData(String responseBody){git
+  var parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
 
-Future<String> createPost(String url, String json_to_send) async{
-  final response =
-  await http.post(url, body: json_to_send);
+  List<Post> list = parsed.map<Post>((json) => new Post.fromJson(json)).toList() ;
+  return list;
+}
+*/
+
+// この関数はまだサーバーの対応待ちでいいです
+Future<String> createPost(String url, String json_to_send) async {
+  final response = await http.post(url, body: json_to_send);
 
   if (response.statusCode == 200) {
-    return('ok');
-  }
-
-  else{
+    return ('ok');
+  } else {
     throw Exception('Failed to create a post');
   }
 }
 
 class Post {
   final int id;
-  //final String deadline;
   final String title;
   final String memo;
 
   Post({this.id, this.title, this.memo});
 
   factory Post.fromJson(Map<String, dynamic> json) {
-    return Post(
-      id: json['id'],
-      //deadline: json['deadline'],
-      title: json['title'],
-      memo: json['memo'],
+    return new Post(
+      id: json['id'] as int,
+      title: json['title'] as String,
+      memo: json['memo'] as String,
     );
   }
 }
-
 
 void main() => runApp(MyApp());
 
@@ -68,52 +79,83 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
 class BodyWidget extends StatefulWidget {
   @override
   BodyWidgetState createState() {
     return new BodyWidgetState();
   }
 }
+
 class BodyWidgetState extends State<BodyWidget> {
-  String serverResponse = 'Server response';
+  List<String> serverResponse = [];
+
+  @override
+  void initState() {
+    //super.initState();
+    _stringmakeGetRequest();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(32.0),
-      child: Align(
-        alignment: Alignment.topCenter,
-        child: SizedBox(
-          width: 200,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              RaisedButton(
-                child: Text('Send request to server'),
-                onPressed: () {
-                  _makeGetRequest();
-                },
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(serverResponse),
-              ),
-            ],
-          ),
-        ),
+      padding: const EdgeInsets.all(22.0),
+      child: new GridView.count(
+        crossAxisCount: 2,
+        children: List.generate(serverResponse.length, (index) {
+          return stringgetStructuredGridCell(
+              serverResponse[index].replaceAll(r'},', '}'));
+        }),
       ),
     );
   }
-  _makeGetRequest() async {
-    Post response = await fetchPost();
+
+  _stringmakeGetRequest() async {
+    List<String> response = await stringfetchPost();
     setState(() {
-      serverResponse = response.memo;
+      serverResponse = response;
     });
   }
 }
 
+Card stringgetStructuredGridCell(String one_elm) {
+  return new Card(
+      elevation: 1.5,
+      child: new Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisSize: MainAxisSize.min,
+        verticalDirection: VerticalDirection.down,
+        children: <Widget>[
+          // can add picture here
+          new Padding(
+            padding: EdgeInsets.only(left: 20.0, right: 20.0, top: 20),
+            child: new Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                // new Icon(Icons.book),
+                new Image(
+                  image: new AssetImage('res/img/book.png'),
+                  width: 80,
+                  height: 80,
+                ),
+//                new Text(post.id.toString()),
+                // 各々の要素をPostクラスに変換した後titleに対応する要素を引っ張ってくる
+                // (正規表現でもいいですが、後で仕様が変わることを考えると
+                // Postクラスに変換した方がいい？
+                // というかここはできれば後でmain関数の外に出したい
+                new Text(
+                  Post.fromJson(jsonDecode(one_elm)).title,
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+          )
+        ],
+      ));
+}
 
 /*
-以下動作確認用のmain関数
+以下動作確認用のmain関数の例
 
 void main() {
 
@@ -132,4 +174,3 @@ void main() {
   );
 }
 */
-
