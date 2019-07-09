@@ -1,41 +1,87 @@
 import 'dart:async';
 import 'dart:convert';
-
 import 'dart:io' show Platform;
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-// import 'package:flutter_web/material.dart';
 import 'package:http/http.dart' as http;
 
-// 6月25 方針転換（みよし） レスポンスを全てStringで受け取る→Json各々要素のリストにする。ただしこの時List<String>
-// →レンダリング時にStringをPostに変換してお好みの要素を取り出す
+// 〜〜〜〜1ページ目の手続きの説明〜〜〜〜〜
+//(1)home には　Stateful な　BodyWidgetをbodyとしてもつScaffold がある。(class MyApp)
+//(2)BodyWidgetが
 
-// ",\n"区切りでレスポンスのbodyは帰ってきてるみたい。
-// この仕様は変わる可能性が高いので、サーバーの仕様が変わったら適宜変更する。
-Future<List<String>> stringfetchPost() async {
-  final response = await http.get('http://localhost:8080/api/v1/event');
-  if (response.statusCode == 200) {
-//    return Post.fromJson(jsonDecode(response.body));
-    print(response.body);
-    return response.body.trim().split("\n");
-  } else {
-    throw Exception('Failed to load post');
+class BooksList {
+  final List<Book> books;
+
+  BooksList({
+    this.books,
+  });
+
+  factory BooksList.fromJson(List<dynamic> parsedJson) {
+    List<Book> books = new List<Book>();
+    books = parsedJson.map((i) => Book.fromJson(i)).toList();
+
+    return new BooksList(books: books);
   }
 }
 
-// generate a list of posts about books from received json response
-//　あとで使う（今はmain関数で変換する程度にしてるが処理が多くなるにつれ対応を考えなければならない。）
-/*
-List<Post> parseData(String responseBody){git
-  var parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
+class Book {
+  final int id;
+  final String title;
+  final int ISBN;
 
-  List<Post> list = parsed.map<Post>((json) => new Post.fromJson(json)).toList() ;
-  return list;
+  Book({
+    this.id,
+    this.title,
+    this.ISBN,
+  });
+
+  factory Book.fromJson(Map<String, dynamic> json) {
+    return new Book(
+      id: json['id'],
+      title: json['title'],
+      ISBN: json['ISBN'],
+    );
+  }
 }
-*/
 
-// この関数はまだサーバーの対応待ちでいいです
+class Book_detail {
+  final int ISBN;
+  final String title;
+  final String description;
+
+  Book_detail({
+    this.ISBN,
+    this.title,
+    this.description,
+  });
+
+  factory Book_detail.fromJson(Map<String, dynamic> json) {
+    return new Book_detail(
+      ISBN: json['ISBN'],
+      title: json['title'],
+      description: json['description'],
+    );
+  }
+}
+
+Future<Book_detail> fetchBook_detail(String ISBN) async {
+  final response = await http.get('http://localhost:8080/books/' + ISBN);
+  if (response.statusCode == 200) {
+    Book_detail l = Book_detail.fromJson(jsonDecode(response.body));
+    return l;
+  }
+}
+
+Future<List<Book>> fetchBooks() async {
+  final response = await http.get('http://localhost:8080/books');
+  print(response.body);
+  if (response.statusCode == 200) {
+    Iterable l = jsonDecode(response.body);
+    List<Book> books = l.map((model) => Book.fromJson(model)).toList();
+    return books;
+  }
+}
+
 Future<String> createPost(String url, String json_to_send) async {
   final response = await http.post(url, body: json_to_send);
 
@@ -43,22 +89,6 @@ Future<String> createPost(String url, String json_to_send) async {
     return ('ok');
   } else {
     throw Exception('Failed to create a post');
-  }
-}
-
-class Post {
-  final int id;
-  final String title;
-  final String memo;
-
-  Post({this.id, this.title, this.memo});
-
-  factory Post.fromJson(Map<String, dynamic> json) {
-    return new Post(
-      id: json['id'] as int,
-      title: json['title'] as String,
-      memo: json['memo'] as String,
-    );
   }
 }
 
@@ -74,7 +104,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: Scaffold(
-        appBar: AppBar(title: Text('Flutter Client')),
+        appBar: AppBar(title: Text('Think Book')),
         body: BodyWidget(),
       ),
     );
@@ -89,7 +119,7 @@ class BodyWidget extends StatefulWidget {
 }
 
 class BodyWidgetState extends State<BodyWidget> {
-  List<String> serverResponse = [];
+  List<Book> serverResponse = [];
 
   @override
   void initState() {
@@ -105,21 +135,24 @@ class BodyWidgetState extends State<BodyWidget> {
         crossAxisCount: 2,
         children: List.generate(serverResponse.length, (index) {
           return stringgetStructuredGridCell(
-              context, serverResponse[index].replaceAll(r'},', '}'));
+              context,
+              serverResponse[index].title,
+              serverResponse[index].ISBN.toString());
         }),
       ),
     );
   }
 
   _stringmakeGetRequest() async {
-    List<String> response = await stringfetchPost();
+    List<Book> response = await fetchBooks();
     setState(() {
       serverResponse = response;
     });
   }
 }
 
-Card stringgetStructuredGridCell(BuildContext context, String one_elm) {
+Card stringgetStructuredGridCell(
+    BuildContext context, String one_elm, String ISBN) {
   return new Card(
       elevation: 1.5,
       child: new Column(
@@ -141,13 +174,15 @@ Card stringgetStructuredGridCell(BuildContext context, String one_elm) {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => DetailScreen(book_info: one_elm),
+                        builder: (context) =>
+                            DetailScreen(book_name: one_elm, book_ISBN: ISBN),
                       ),
                     );
                   },
                 ),
                 new Text(
-                  Post.fromJson(jsonDecode(one_elm)).title,
+                  //Post.fromJson(jsonDecode(one_elm)).title,
+                  one_elm,
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
               ],
@@ -157,28 +192,46 @@ Card stringgetStructuredGridCell(BuildContext context, String one_elm) {
       ));
 }
 
-class DetailScreen extends StatelessWidget {
-  // Declare a field that holds the Todo.
-  final String book_info;
+class DetailScreen extends StatefulWidget {
+  final String book_name;
+  final String book_ISBN;
 
-  // In the constructor, require a Todo.
-  DetailScreen({@required this.book_info});
+  DetailScreen({@required this.book_name, @required this.book_ISBN});
+
+  @override
+  _DetailScreenState createState() =>
+      new _DetailScreenState(book_name: book_name, book_ISBN: book_ISBN);
+}
+
+class _DetailScreenState extends State<DetailScreen> {
+  final String book_name;
+  final String book_ISBN;
+
+  String book_detail = "";
+
+  _DetailScreenState({@required this.book_name, @required this.book_ISBN});
 
   @override
   Widget build(BuildContext context) {
-    // Use the Todo to create the UI.
     return Scaffold(
-      appBar: AppBar(
-        title: Text(Post.fromJson(jsonDecode(book_info)).title),
-      ),
-      body: Center(
-        child: RaisedButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          child: Text('Go back!'),
+        appBar: AppBar(
+          title: Text(book_name),
         ),
-      ),
-    );
+        body: Center(
+          child: Text(book_detail),
+        ));
+  }
+
+  @override
+  void initState() {
+    //super.initState();
+    _makeGetRequest();
+  }
+
+  _makeGetRequest() async {
+    Book_detail response = await fetchBook_detail(book_ISBN);
+    setState(() {
+      book_detail = response.description;
+    });
   }
 }
