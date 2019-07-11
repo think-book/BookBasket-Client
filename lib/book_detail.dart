@@ -24,8 +24,8 @@ class BookDetail {
   }
 }
 
-Future<BookDetail> fetchBookDetail(String book_ISBN) async {
-  final response = await http.get('http://localhost:8080/books/' + book_ISBN);
+Future<BookDetail> fetchBookDetail(String bookISBN) async {
+  final response = await http.get('http://localhost:8080/books/' + bookISBN);
   if (response.statusCode == 200) {
     BookDetail ret = BookDetail.fromJson(jsonDecode(response.body));
     return ret;
@@ -44,43 +44,43 @@ Future<String> createPost(String url, String json_to_send) async {
 }
 
 class DetailScreen extends StatefulWidget {
-  final String book_title;
-  final int book_ISBN;
+  final String bookTitle;
+  final int bookISBN;
 
-  DetailScreen({@required this.book_title, @required this.book_ISBN});
+  DetailScreen({@required this.bookTitle, @required this.bookISBN});
 
   @override
   DetailScreenState createState() =>
-      new DetailScreenState(book_title: book_title, book_ISBN: book_ISBN);
+      new DetailScreenState(bookTitle: bookTitle, bookISBN: bookISBN);
 }
 
 class DetailScreenState extends State<DetailScreen> {
-  final String book_title;
-  final int book_ISBN;
-  String book_description = "";
+  final String bookTitle;
+  final int bookISBN;
+  String bookDescription = "";
 
   @override
   void initState() {
     makeGetRequest();
   }
 
-  DetailScreenState({@required this.book_title, @required this.book_ISBN});
+  DetailScreenState({@required this.bookTitle, @required this.bookISBN});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text(book_title),
+          title: Text(bookTitle),
         ),
         body: Center(
-          child: Text(book_description),
+          child: Text(bookDescription),
         ));
   }
 
   makeGetRequest() async {
-    BookDetail response = await fetchBookDetail(book_ISBN.toString());
+    BookDetail response = await fetchBookDetail(bookISBN.toString());
     setState(() {
-      book_description = response.description;
+      bookDescription = response.description;
     });
   }
 }

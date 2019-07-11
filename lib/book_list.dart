@@ -89,7 +89,7 @@ class BodyWidgetState extends State<BodyWidget> {
 }
 
 Card StructuredGridCell(
-    BuildContext context, String book_title, int book_ISBN) {
+    BuildContext context, String bookTitle, int bookISBN) {
   return new Card(
       elevation: 1.5,
       child: new Column(
@@ -109,13 +109,13 @@ Card StructuredGridCell(
                       context,
                       MaterialPageRoute(
                         builder: (context) => DetailScreen(
-                            book_title: book_title, book_ISBN: book_ISBN),
+                            bookTitle: bookTitle, bookISBN: bookISBN),
                       ),
                     );
                   },
                 ),
                 new Text(
-                  book_title,
+                  bookTitle,
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
               ],
