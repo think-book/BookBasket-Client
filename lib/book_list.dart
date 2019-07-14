@@ -3,7 +3,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-import 'book_detail.dart';
+//　次のページ
+import 'package:bookbasket/book_detail_screen.dart';
 
 class BooksList {
   final List<Book> books;
@@ -108,8 +109,8 @@ Card StructuredGridCell(
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => DetailScreen(
-                            bookTitle: bookTitle, bookISBN: bookISBN),
+                        //builder: (context) => ThreadList(),
+                        builder: (context) => DetailScreen(bookTitle: bookTitle, bookISBN: bookISBN)
                       ),
                     );
                   },

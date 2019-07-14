@@ -4,6 +4,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
+// あとで使う予定
+//import 'package:bookbasket/forum/thread_info.dart';
+
 class BookDetail {
   final int ISBN;
   final String title;
@@ -32,55 +35,54 @@ Future<BookDetail> fetchBookDetail(String bookISBN) async {
   }
 }
 
-// 未使用　これから使う
-Future<String> createPost(String url, String json_to_send) async {
-  final response = await http.post(url, body: json_to_send);
+class ForumsList {
+  final List<Forum> forums;
 
+  ForumsList({
+    this.forums,
+  });
+
+  factory ForumsList.fromJson(List<dynamic> parsedJson) {
+    List<Forum> forums = new List<Forum>();
+    forums = parsedJson.map((i) => Forum.fromJson(i)).toList();
+
+    return new ForumsList(forums: forums);
+  }
+}
+
+class Forum {
+  final int id;
+  final int userID;
+  final String title;
+  final int ISBN;
+
+  Forum({
+    this.id,
+    this.userID,
+    this.title,
+    this.ISBN,
+  });
+
+  factory Forum.fromJson(Map<String, dynamic> json) {
+    return new Forum(
+      id: json['id'],
+      userID: json['userID'],
+      title: json['title'],
+      ISBN: json['ISBN'],
+    );
+  }
+}
+
+Future<List<Forum>> fetchForumsList(String ISBN) async {
+  //本当は以下をを使うべきだがISBN200に対応するスレッドのリストは今の所サーバーに無いので常に100に対応するやつを表示
+  //final response = await http.get('http://localhost:8080/books/' + ISBN + '/threads');
+  final response = await http.get('http://localhost:8080/books/100/threads');
+  //　コンソールに出力する用
+  print(response.body);
   if (response.statusCode == 200) {
-    return ('ok');
-  } else {
-    throw Exception('Failed to create a post');
+    Iterable l = jsonDecode(response.body);
+    List<Forum> forums = l.map((model) => Forum.fromJson(model)).toList();
+    return forums;
   }
 }
 
-class DetailScreen extends StatefulWidget {
-  final String bookTitle;
-  final int bookISBN;
-
-  DetailScreen({@required this.bookTitle, @required this.bookISBN});
-
-  @override
-  DetailScreenState createState() =>
-      new DetailScreenState(bookTitle: bookTitle, bookISBN: bookISBN);
-}
-
-class DetailScreenState extends State<DetailScreen> {
-  final String bookTitle;
-  final int bookISBN;
-  String bookDescription = "";
-
-  @override
-  void initState() {
-    makeGetRequest();
-  }
-
-  DetailScreenState({@required this.bookTitle, @required this.bookISBN});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: Text(bookTitle),
-        ),
-        body: Center(
-          child: Text(bookDescription),
-        ));
-  }
-
-  makeGetRequest() async {
-    BookDetail response = await fetchBookDetail(bookISBN.toString());
-    setState(() {
-      bookDescription = response.description;
-    });
-  }
-}
