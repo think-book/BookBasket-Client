@@ -41,7 +41,10 @@ class ThreadListState extends State<ThreadList> {
   }
 
   void _getThreadMessage() async {
-    final response = await http.get('http://10.0.2.2:8080/threads/1');
+    //androidのときはこっち（推奨）
+    //final response = await http.get('http://10.0.2.2:8080/threads/1');
+    //iOSのときはこっち（授業的には非推奨だが速い）
+    final response = await http.get('http://localhost:8080/threads/1');
     if (response.statusCode == 200) {
       setState(() {
         Iterable lst = jsonDecode(response.body);
