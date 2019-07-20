@@ -24,11 +24,14 @@ class DetailScreenState extends State<DetailScreen> {
   final String bookTitle;
   final int bookISBN;
   String bookDescription = "";
-  List<Forum> forums = [];
+  List<Thread> forums = [];
+
+  TextEditingController titleControler = new TextEditingController();
 
   @override
   void initState() {
-    makeGetRequest();
+    getThread();
+    getBookDetail();
   }
 
   DetailScreenState({@required this.bookTitle, @required this.bookISBN});
@@ -103,24 +106,62 @@ class DetailScreenState extends State<DetailScreen> {
                               context,
                               MaterialPageRoute(
                                 builder: (context) =>
-                                    ThreadScreen(info: forums[index].title),
+                                    ThreadScreen(info: forums[index].title, id: forums[index].id),
                               ), /* react to the tile being tapped */
                             );
                           },
                         ));
                   },
                   itemCount: forums.length)),
+          Padding(
+            padding: const EdgeInsets.all(25.0),
+            child: new Column(
+              children: <Widget>[
+                new TextField(
+                  controller: titleControler,
+                  decoration: InputDecoration(
+                      hintText: "スレッドの題名を入力", labelText: 'Thread Title'),
+                ),
+                new RaisedButton(
+                  onPressed: () async {
+                    // ユーザー登録が実装されたらuserID: userID.toString() とかしてURLを変える
+                    ThreadToAdd newThreadToAdd = new ThreadToAdd(
+                        userId: "1", title: titleControler.text);
+                    createThreadToAdd("http://localhost:8080/books/" + bookISBN.toString() +"/threads", body: newThreadToAdd.toMap());
+                    setState(() {
+                      // ThreadのIDは実際はサーバー側で違うものを付与してる可能性があるからここはサーバーと要相談
+                      // もしサーバーに追加して良いか逐一問い合わせるなら、
+                      // 以下を消してgetThread() で良いが、遅くなるのは懸念
+                      forums.add(Thread(id: forums.length + 1,
+                          userID: 1,
+                          title: titleControler.text,
+                          ISBN: bookISBN));
+                      titleControler.text = "";
+                    });
+                  },
+                  child: const Text("スレッド追加"),
+                )
+              ],
+            ),
+          ),
         ],
       ),
     );
   }
 
-  makeGetRequest() async {
-    List<Forum> response1 = await fetchForumsList(bookISBN.toString());
-    BookDetail response2 = await fetchBookDetail(bookISBN.toString());
+  getThread() async {
+    List<Thread> response = await fetchThreadsList(bookISBN.toString());
     setState(() {
-      forums = response1;
-      bookDescription = response2.description;
+      forums = response;
     });
   }
+
+
+  getBookDetail() async {
+    BookDetail response = await fetchBookDetail(bookISBN.toString());
+    setState(() {
+      bookDescription = response.description;
+    });
+  }
+
 }

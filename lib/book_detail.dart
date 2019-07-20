@@ -35,36 +35,36 @@ Future<BookDetail> fetchBookDetail(String bookISBN) async {
   }
 }
 
-class ForumsList {
-  final List<Forum> forums;
+class ThreadsList {
+  final List<Thread> forums;
 
-  ForumsList({
+  ThreadsList({
     this.forums,
   });
 
-  factory ForumsList.fromJson(List<dynamic> parsedJson) {
-    List<Forum> forums = new List<Forum>();
-    forums = parsedJson.map((i) => Forum.fromJson(i)).toList();
+  factory ThreadsList.fromJson(List<dynamic> parsedJson) {
+    List<Thread> forums = new List<Thread>();
+    forums = parsedJson.map((i) => Thread.fromJson(i)).toList();
 
-    return new ForumsList(forums: forums);
+    return new ThreadsList(forums: forums);
   }
 }
 
-class Forum {
+class Thread {
   final int id;
   final int userID;
   final String title;
   final int ISBN;
 
-  Forum({
+  Thread({
     this.id,
     this.userID,
     this.title,
     this.ISBN,
   });
 
-  factory Forum.fromJson(Map<String, dynamic> json) {
-    return new Forum(
+  factory Thread.fromJson(Map<String, dynamic> json) {
+    return new Thread(
       id: json['id'],
       userID: json['userID'],
       title: json['title'],
@@ -73,16 +73,49 @@ class Forum {
   }
 }
 
-Future<List<Forum>> fetchForumsList(String ISBN) async {
+Future<List<Thread>> fetchThreadsList(String ISBN) async {
   //本当は以下をを使うべきだがISBN200に対応するスレッドのリストは今の所サーバーに無いので常に100に対応するやつを表示
-  //final response = await http.get('http://localhost:8080/books/' + ISBN + '/threads');
-  final response = await http.get('http://localhost:8080/books/100/threads');
+  final response = await http.get('http://localhost:8080/books/' + ISBN + '/threads');
+  //final response = await http.get('http://localhost:8080/books/100/threads');
   //　コンソールに出力する用
   print(response.body);
   if (response.statusCode == 200) {
     Iterable l = jsonDecode(response.body);
-    List<Forum> forums = l.map((model) => Forum.fromJson(model)).toList();
+    List<Thread> forums = l.map((model) => Thread.fromJson(model)).toList();
     return forums;
   }
 }
 
+
+class ThreadToAdd {
+  final String userId;
+  final String title;
+
+  ThreadToAdd({this.userId, this.title});
+
+  factory ThreadToAdd.fromJson(Map<String, dynamic> json) {
+    return ThreadToAdd(
+      userId: json['userId'],
+      title: json['title'],
+    );
+  }
+
+  Map toMap() {
+    var map = new Map<String, dynamic>();
+    map["userId"] = userId;
+    map["title"] = title;
+
+    return map;
+  }
+}
+
+Future<ThreadToAdd> createThreadToAdd(String url, {Map body}) async {
+  final response = await http.post(url, body: body);
+  print(response.body);
+  if (response.statusCode == 200) {
+    return ThreadToAdd.fromJson(json.decode(response.body));
+  }
+  else {
+    throw new Exception("Error while fetching data");
+  }
+}

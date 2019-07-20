@@ -52,14 +52,14 @@ Future<List<Book>> fetchBooksList() async {
   }
 }
 
-class BodyWidget extends StatefulWidget {
+class BookListScreen extends StatefulWidget {
   @override
-  BodyWidgetState createState() {
-    return new BodyWidgetState();
+  BookListScreenState createState() {
+    return new BookListScreenState();
   }
 }
 
-class BodyWidgetState extends State<BodyWidget> {
+class BookListScreenState extends State<BookListScreen> {
   List<Book> serverResponse = [];
 
   @override
