@@ -6,20 +6,6 @@ import 'package:http/http.dart' as http;
 //　次のページ
 import 'package:bookbasket/book_detail_screen.dart';
 
-class BooksList {
-  final List<Book> books;
-
-  BooksList({
-    this.books,
-  });
-
-  factory BooksList.fromJson(List<dynamic> parsedJson) {
-    List<Book> books = new List<Book>();
-    books = parsedJson.map((i) => Book.fromJson(i)).toList();
-
-    return new BooksList(books: books);
-  }
-}
 
 class Book {
   final int id;
