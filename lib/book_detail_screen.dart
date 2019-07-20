@@ -127,17 +127,22 @@ class DetailScreenState extends State<DetailScreen> {
                     // ユーザー登録が実装されたらuserID: userID.toString() とかしてURLを変える
                     ThreadToAdd newThreadToAdd = new ThreadToAdd(
                         userId: "1", title: titleControler.text);
-                    createThreadToAdd("http://localhost:8080/books/" + bookISBN.toString() +"/threads", body: newThreadToAdd.toMap());
-                    setState(() {
-                      // ThreadのIDは実際はサーバー側で違うものを付与してる可能性があるからここはサーバーと要相談
-                      // もしサーバーに追加して良いか逐一問い合わせるなら、
-                      // 以下を消してgetThread() で良いが、遅くなるのは懸念
-                      forums.add(Thread(id: forums.length + 1,
-                          userID: 1,
-                          title: titleControler.text,
-                          ISBN: bookISBN));
+                    try {
+                      createThreadToAdd("http://localhost:8080/books/" + bookISBN.toString() +"/threads", body: newThreadToAdd.toMap());
+                      setState(() {
+                        // ThreadのIDは実際はサーバー側で違うものを付与してる可能性があるからここはサーバーと要相談
+                        // もしサーバーに追加して良いか逐一問い合わせるなら、
+                        // 以下を消してgetThread() で良いが、遅くなるのは懸念
+                        forums.add(Thread(id: forums.length + 1,
+                            userID: 1,
+                            title: titleControler.text,
+                            ISBN: bookISBN));
+                        titleControler.text = "";
+                      });
+                      } catch (exception){
                       titleControler.text = "";
-                    });
+                      // ここでアラートとか出せたら良いですね
+                    };
                   },
                   child: const Text("スレッド追加"),
                 )
