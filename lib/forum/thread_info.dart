@@ -4,8 +4,9 @@ import 'package:meta/meta.dart';
 @immutable
 class ThreadInfo {
   final String title;
+  final int id;
 
-  ThreadInfo({@required this.title});
+  ThreadInfo({@required this.title, @required this.id});
 
   factory ThreadInfo.fromJson(Map<String, dynamic> json) {
     return ThreadInfo(title: json['title']);

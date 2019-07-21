@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+import 'package:bookbasket/api/client.dart';
 
 //　次のページ
 import 'package:bookbasket/book_detail_screen.dart';
@@ -41,17 +41,6 @@ class Book {
   }
 }
 
-Future<List<Book>> fetchBooksList() async {
-  final response = await http.get('http://localhost:8080/books');
-  //　コンソールに出力する用
-  print(response.body);
-  if (response.statusCode == 200) {
-    Iterable l = jsonDecode(response.body);
-    List<Book> books = l.map((model) => Book.fromJson(model)).toList();
-    return books;
-  }
-}
-
 class BodyWidget extends StatefulWidget {
   @override
   BodyWidgetState createState() {
@@ -82,15 +71,15 @@ class BodyWidgetState extends State<BodyWidget> {
   }
 
   makeGetRequest() async {
-    List<Book> response = await fetchBooksList();
+    var client = new BookClient();
+    List<Book> response = await client.getBooks();
     setState(() {
       serverResponse = response;
     });
   }
 }
 
-Card StructuredGridCell(
-    BuildContext context, String bookTitle, int bookISBN) {
+Card StructuredGridCell(BuildContext context, String bookTitle, int bookISBN) {
   return new Card(
       elevation: 1.5,
       child: new Column(
@@ -109,9 +98,9 @@ Card StructuredGridCell(
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        //builder: (context) => ThreadList(),
-                        builder: (context) => DetailScreen(bookTitle: bookTitle, bookISBN: bookISBN)
-                      ),
+                          //builder: (context) => ThreadList(),
+                          builder: (context) => DetailScreen(
+                              bookTitle: bookTitle, bookISBN: bookISBN)),
                     );
                   },
                 ),

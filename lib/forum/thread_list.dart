@@ -2,18 +2,25 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'thread_message.dart';
+import 'package:bookbasket/forum/thread_message.dart';
+import 'package:bookbasket/api/client.dart';
 
 // スレッドのListViewを返すWidget
 class ThreadList extends StatefulWidget {
+  final int threadId;
+
+  ThreadList({@required this.threadId});
   @override
   State<StatefulWidget> createState() {
-    return ThreadListState();
+    return ThreadListState(threadId: threadId);
   }
 }
 
 class ThreadListState extends State<ThreadList> {
   List<ThreadMessage> messages = [];
+  final int threadId;
+
+  ThreadListState({@required this.threadId});
 
   @override
   void initState() {
@@ -41,17 +48,10 @@ class ThreadListState extends State<ThreadList> {
   }
 
   void _getThreadMessage() async {
-    //androidのときはこっち（推奨）
-    //final response = await http.get('http://10.0.2.2:8080/threads/1');
-    //iOSのときはこっち（授業的には非推奨だが速い）
-    final response = await http.get('http://localhost:8080/threads/1');
-    if (response.statusCode == 200) {
-      setState(() {
-        Iterable lst = jsonDecode(response.body);
-        messages = lst.map((json) => ThreadMessage.fromJson(json)).toList();
-      });
-    } else {
-      throw Exception('Failed to load thread messages');
-    }
+    var client = new BookClient();
+    var messages = await client.getThreadMessages(threadId);
+    setState(() {
+      this.messages = messages;
+    });
   }
 }

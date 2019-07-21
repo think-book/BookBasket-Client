@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:bookbasket/api/client.dart';
 
 // あとで使う予定
 //import 'package:bookbasket/forum/thread_info.dart';
@@ -24,14 +25,6 @@ class BookDetail {
       title: json['title'],
       description: json['description'],
     );
-  }
-}
-
-Future<BookDetail> fetchBookDetail(String bookISBN) async {
-  final response = await http.get('http://localhost:8080/books/' + bookISBN);
-  if (response.statusCode == 200) {
-    BookDetail ret = BookDetail.fromJson(jsonDecode(response.body));
-    return ret;
   }
 }
 
@@ -72,17 +65,3 @@ class Forum {
     );
   }
 }
-
-Future<List<Forum>> fetchForumsList(String ISBN) async {
-  //本当は以下をを使うべきだがISBN200に対応するスレッドのリストは今の所サーバーに無いので常に100に対応するやつを表示
-  //final response = await http.get('http://localhost:8080/books/' + ISBN + '/threads');
-  final response = await http.get('http://localhost:8080/books/100/threads');
-  //　コンソールに出力する用
-  print(response.body);
-  if (response.statusCode == 200) {
-    Iterable l = jsonDecode(response.body);
-    List<Forum> forums = l.map((model) => Forum.fromJson(model)).toList();
-    return forums;
-  }
-}
-

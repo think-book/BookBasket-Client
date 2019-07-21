@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'book_list.dart';
+import 'package:bookbasket/book_list.dart';
 
 void main() => runApp(MyApp());
 

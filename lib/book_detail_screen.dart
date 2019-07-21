@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:bookbasket/api/client.dart';
+import 'package:bookbasket/forum/thread_info.dart';
 
 // 使っている関数、クラスなど
 import 'package:bookbasket/book_detail.dart';
@@ -102,8 +104,10 @@ class DetailScreenState extends State<DetailScreen> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) =>
-                                    ThreadScreen(info: forums[index].title),
+                                builder: (context) => ThreadScreen(
+                                    info: ThreadInfo(
+                                        title: forums[index].title,
+                                        id: forums[index].id)),
                               ), /* react to the tile being tapped */
                             );
                           },
@@ -116,11 +120,12 @@ class DetailScreenState extends State<DetailScreen> {
   }
 
   makeGetRequest() async {
-    List<Forum> response1 = await fetchForumsList(bookISBN.toString());
-    BookDetail response2 = await fetchBookDetail(bookISBN.toString());
+    var client = new BookClient();
+    List<Forum> forums = await client.getForum(bookISBN.toString());
+    BookDetail detail = await client.getBookDetail(bookISBN.toString());
     setState(() {
-      forums = response1;
-      bookDescription = response2.description;
+      this.forums = forums;
+      bookDescription = detail.description;
     });
   }
 }
