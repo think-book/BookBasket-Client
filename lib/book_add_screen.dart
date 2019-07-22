@@ -7,8 +7,6 @@ class BookAddScreen extends StatefulWidget {
   String bookTitle;
   int bookISBN;
 
-//  BookAddScreen({@required this.bookTitle, @required this.bookISBN});
-
   @override
   BookAddScreenState createState() =>
       new BookAddScreenState();
@@ -20,11 +18,6 @@ class BookAddScreenState extends State<BookAddScreen> {
   String bookDescription = "";
 
   final _formKey = GlobalKey<FormState>();
-
-//  @override
-//  void initState() {
-//    makeGetRequest();
-//  }
 
   BookAddScreenState();
 
@@ -153,7 +146,8 @@ class BookAddScreenState extends State<BookAddScreen> {
                     title: bookTitle, ISBN: bookISBN, description: bookDescription,
                   );
                   var result = createBookToAdd("http://localhost:8080/books", bookDetail.toMap());
-                  // try catchのcatchでexceptionで拾わなかった、asyncが原因かも
+
+                  // try catchのcatchでexceptionで拾わなかった、asyncが原因かも、要相談
 //                  if(result == null){
 //                    print("Book failed to add."); // show book was not added message
 //                  }
