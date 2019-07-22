@@ -6,7 +6,6 @@ import 'package:http/http.dart' as http;
 //　次のページ
 import 'package:bookbasket/book_detail_screen.dart';
 
-
 class Book {
   final int id;
   final String title;
@@ -75,8 +74,7 @@ class BookListScreenState extends State<BookListScreen> {
   }
 }
 
-Card StructuredGridCell(
-    BuildContext context, String bookTitle, int bookISBN) {
+Card StructuredGridCell(BuildContext context, String bookTitle, int bookISBN) {
   return new Card(
       elevation: 1.5,
       child: new Column(
@@ -95,9 +93,9 @@ Card StructuredGridCell(
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        //builder: (context) => ThreadList(),
-                        builder: (context) => DetailScreen(bookTitle: bookTitle, bookISBN: bookISBN)
-                      ),
+                          //builder: (context) => ThreadList(),
+                          builder: (context) => DetailScreen(
+                              bookTitle: bookTitle, bookISBN: bookISBN)),
                     );
                   },
                 ),

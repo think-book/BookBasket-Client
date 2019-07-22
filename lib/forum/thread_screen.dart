@@ -33,8 +33,7 @@ class ThreadScreen extends StatelessWidget {
           ),
         ),
       ),
-      body: ThreadList(id:id),
-
+      body: ThreadList(id: id),
     );
   }
 }
