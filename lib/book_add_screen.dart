@@ -1,49 +1,7 @@
-import 'dart:async';
-import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 
-class BookDetail {
-  final String ISBN;
-  final String title;
-  final String description;
-
-  BookDetail({
-    this.ISBN,
-    this.title,
-    this.description,
-  });
-
-  factory BookDetail.fromJson(Map<String, dynamic> json) {
-    return new BookDetail(
-      title: json['title'],
-      ISBN: json['ISBN'].toString(),
-      description: json['description'],
-    );
-  }
-
-  Map toMap() {
-    var map = new Map<String, dynamic>();
-    map['title'] = title;
-    map['ISBN'] = ISBN;
-    map['description'] = description;
-
-    return map;
-  }
-}
-
-Future<BookDetail> createBookToAdd(String url, Map body) async {
-  final response = await http.post(url, body: body);
-
-  if (response.statusCode == 200) {
-    return BookDetail.fromJson(json.decode(response.body));
-  }
-
-  print(response.body);
-  return null;
-//  throw new Exception("Failed to create a post.");
-}
+import 'package:bookbasket/book_add.dart';
 
 class BookAddScreen extends StatefulWidget {
   String bookTitle;
@@ -127,6 +85,7 @@ class BookAddScreenState extends State<BookAddScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
+          // 三つの記入欄とボタン
           TextFormField(
             decoration: const InputDecoration(
               icon: Icon(Icons.book),
@@ -194,10 +153,11 @@ class BookAddScreenState extends State<BookAddScreen> {
                     title: bookTitle, ISBN: bookISBN, description: bookDescription,
                   );
                   var result = createBookToAdd("http://localhost:8080/books", bookDetail.toMap());
+                  // try catchのcatchでexceptionで拾わなかった、asyncが原因かも
 //                  if(result == null){
 //                    print("Book failed to add."); // show book was not added message
 //                  }
-                  Navigator.pop(context);
+                  Navigator.of(context).pop('magic');
                 }
               },
               child: const Text('Register'),

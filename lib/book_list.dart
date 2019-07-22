@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 import 'book_detail.dart';
-import 'book_add_manually.dart';
+import 'book_add_screen.dart';
 
 class BooksList {
   final List<Book> books;
@@ -82,21 +82,24 @@ class BodyWidgetState extends State<BodyWidget> {
           ),
         ),
 
-//        Align(
-//          alignment: Alignment.bottomRight,
-//          child: new FloatingActionButton(
-//              child: new Icon(Icons.add_box),
-//              onPressed: () => {
-//              Navigator.push(
-//                context,
-//                MaterialPageRoute(
-//                  builder: (context) => BookAddScreen(),
-//                ),
-//              )
-//              }
-//          ),
-//        ),
-
+        Align(
+          alignment: Alignment.bottomRight,
+          child: new FloatingActionButton(
+              child: new Icon(Icons.add_box),
+              onPressed: () => {
+              Navigator.of(context)
+                  .push(new MaterialPageRoute<String>(builder: (context) => BookAddScreen(),))
+                  .then((String value) {
+                print(value);
+                if (value == 'magic'){
+                  setState(() {
+                    initState();
+                  });
+                }
+              }),
+              }
+          ),
+        ),
       ],
     );
   }
