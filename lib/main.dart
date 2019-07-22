@@ -17,16 +17,27 @@ class MyApp extends StatelessWidget {
       home: Scaffold(
         appBar: AppBar(title: Text('あなたの本棚')),
         body: BodyWidget(),
+        floatingActionButton: FloatingButton(),
+      ),
+    );
+  }
+}
 
-//        floatingActionButton: new FloatingActionButton(
-//          child: new Icon(Icons.add_box),
-//          onPressed: (){
-//            Navigator.push(
-//              context,
-//              MaterialPageRoute(builder: (context) => BookAddScreen()),
-//            );
-//          },
-//        ),
+class FloatingButton extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      alignment: Alignment.bottomRight,
+      child: new FloatingActionButton(
+        child: new Icon(Icons.add_box),
+        onPressed: () => {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+            builder: (context) => BookAddScreen(),
+            ),
+          )
+        }
       ),
     );
   }
