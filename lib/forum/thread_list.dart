@@ -6,19 +6,24 @@ import 'thread_message.dart';
 
 // スレッドのListViewを返すWidget
 class ThreadList extends StatefulWidget {
+  final int id;
+
+  ThreadList({@required this.id});
+
   @override
-  State<StatefulWidget> createState() {
-    return ThreadListState();
-  }
+  ThreadListState createState() => new ThreadListState(id: id);
 }
 
 class ThreadListState extends State<ThreadList> {
   List<ThreadMessage> messages = [];
+  final int id;
 
   @override
   void initState() {
     _getThreadMessage();
   }
+
+  ThreadListState({@required this.id});
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +46,11 @@ class ThreadListState extends State<ThreadList> {
   }
 
   void _getThreadMessage() async {
-    final response = await http.get('http://10.0.2.2:8080/threads/1');
+    //androidのときはこっち（推奨）
+    //final response = await http.get('http://10.0.2.2:8080/threads/1');
+    //iOSのときはこっち（授業的には非推奨だが速い）
+    final response =
+        await http.get('http://localhost:8080/threads/' + id.toString());
     if (response.statusCode == 200) {
       setState(() {
         Iterable lst = jsonDecode(response.body);
