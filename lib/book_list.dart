@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 import 'book_detail.dart';
+import 'book_add_manually.dart';
 
 class BooksList {
   final List<Book> books;
@@ -68,15 +69,35 @@ class BodyWidgetState extends State<BodyWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(22.0),
-      child: new GridView.count(
-        crossAxisCount: 2,
-        children: List.generate(serverResponse.length, (index) {
-          return StructuredGridCell(
-              context, serverResponse[index].title, serverResponse[index].ISBN);
-        }),
-      ),
+    return Stack(
+      children: <Widget>[
+        Padding(
+          padding: const EdgeInsets.all(22.0),
+          child: new GridView.count(
+            crossAxisCount: 2,
+            children: List.generate(serverResponse.length, (index) {
+              return StructuredGridCell(
+                  context, serverResponse[index].title, serverResponse[index].ISBN);
+            }),
+          ),
+        ),
+
+//        Align(
+//          alignment: Alignment.bottomRight,
+//          child: new FloatingActionButton(
+//              child: new Icon(Icons.add_box),
+//              onPressed: () => {
+//              Navigator.push(
+//                context,
+//                MaterialPageRoute(
+//                  builder: (context) => BookAddScreen(),
+//                ),
+//              )
+//              }
+//          ),
+//        ),
+
+      ],
     );
   }
 
