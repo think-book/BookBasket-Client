@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'book_list.dart';
+import 'book_add_manually.dart';
 
 void main() => runApp(MyApp());
 
@@ -16,6 +17,16 @@ class MyApp extends StatelessWidget {
       home: Scaffold(
         appBar: AppBar(title: Text('あなたの本棚')),
         body: BodyWidget(),
+
+//        floatingActionButton: new FloatingActionButton(
+//          child: new Icon(Icons.add_box),
+//          onPressed: (){
+//            Navigator.push(
+//              context,
+//              MaterialPageRoute(builder: (context) => BookAddScreen()),
+//            );
+//          },
+//        ),
       ),
     );
   }
