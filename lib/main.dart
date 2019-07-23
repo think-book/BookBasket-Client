@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'book_list_screen.dart';
+import 'package:bookbasket/book_list_screen.dart';
 
 void main() => runApp(MyApp());
 
@@ -11,7 +11,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(
-          title: Text('あたなの本棚'),
+          title: Text('あなたの本棚'),
           flexibleSpace: Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(

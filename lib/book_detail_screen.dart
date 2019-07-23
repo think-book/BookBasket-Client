@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:bookbasket/api/client.dart';
 
 // 使っている関数、クラスなど
 import 'package:bookbasket/book_detail.dart';
@@ -34,6 +35,7 @@ class DetailScreenState extends State<DetailScreen> {
   DetailScreenState({@required this.bookTitle, @required this.bookISBN});
 
   Widget build(BuildContext context) {
+    var client = new BookClient();
     return Material(
       child: Column(
         children: <Widget>[
@@ -77,11 +79,10 @@ class DetailScreenState extends State<DetailScreen> {
                     // ユーザー登録が実装されたらuserID: userID.toString() とかしてURLを変える
                     ThreadToAdd newThreadToAdd = new ThreadToAdd(
                         userId: "1", title: titleControler.text);
-                    createThreadToAdd(
-                        "http://localhost:8080/books/" +
-                            bookISBN.toString() +
-                            "/threads",
-                        body: newThreadToAdd.toMap());
+                    client.postThread(
+                            bookISBN.toString(),
+                            newThreadToAdd: newThreadToAdd
+                        );
                     setState(() {
                       getThread();
                       titleControler.text = "";
@@ -98,16 +99,17 @@ class DetailScreenState extends State<DetailScreen> {
   }
 
   getThread() async {
-    List<Thread> response = await fetchThreadsList(bookISBN.toString());
+    var client = new BookClient();
+    List<Thread> forums = await client.getThreadList(bookISBN.toString());
     setState(() {
-      forums = response;
+        this.forums = forums;
     });
   }
-
   getBookDetail() async {
-    BookDetail response = await fetchBookDetail(bookISBN.toString());
+    var client = new BookClient();
+    BookDetail detail = await client.getBookDetail(bookISBN.toString());
     setState(() {
-      bookDescription = response.description;
+      bookDescription = detail.description;
     });
   }
 }
