@@ -53,7 +53,7 @@ class BookAddScreenState extends State<BookAddScreen> {
         AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0.0,
-          title: Text("Add a new book"),
+          title: Text("Add a new book"), //　色を白にしたい
         ),
         Positioned(
           top: MediaQuery.of(context).size.height * 0.15,
@@ -137,6 +137,7 @@ class BookAddScreenState extends State<BookAddScreen> {
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 16.0),
             child: RaisedButton(
+              color: Color(0xff9b5acf),
               onPressed: () {
                 // Validate returns true if the form is valid, or false otherwise.
                 if (_formKey.currentState.validate()) {

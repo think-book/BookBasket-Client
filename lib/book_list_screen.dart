@@ -72,6 +72,7 @@ class BookListScreenState extends State<BookListScreen> {
           alignment: my_bottomRight,
           child: new FloatingActionButton(
               child: new Icon(Icons.add_box),
+              backgroundColor: Color(0xff9b5acf),
               onPressed: () => {
                     Navigator.of(context)
                         .push(new MaterialPageRoute<String>(
