@@ -3,19 +3,19 @@ import 'dart:async';
 import 'dart:convert';
 
 
-class BookDetail {
+class BookDetailToAdd {
   final String ISBN;
   final String title;
   final String description;
 
-  BookDetail({
+  BookDetailToAdd({
     this.ISBN,
     this.title,
     this.description,
   });
 
-  factory BookDetail.fromJson(Map<String, dynamic> json) {
-    return new BookDetail(
+  factory BookDetailToAdd.fromJson(Map<String, dynamic> json) {
+    return new BookDetailToAdd(
       title: json['title'],
       ISBN: json['ISBN'].toString(),
       description: json['description'],
@@ -32,11 +32,11 @@ class BookDetail {
   }
 }
 
-Future<BookDetail> createBookToAdd(String url, Map body) async {
+Future<BookDetailToAdd> createBookToAdd(String url, Map body) async {
   final response = await http.post(url, body: body);
 
   if (response.statusCode == 200) {
-    return BookDetail.fromJson(json.decode(response.body));
+    return BookDetailToAdd.fromJson(json.decode(response.body));
   }
 
   print(response.body);

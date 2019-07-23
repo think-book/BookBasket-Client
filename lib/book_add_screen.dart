@@ -142,10 +142,10 @@ class BookAddScreenState extends State<BookAddScreen> {
                 if (_formKey.currentState.validate() ){
 
                   _formKey.currentState.save();
-                  BookDetail bookDetail = new BookDetail(
+                  BookDetailToAdd bookDetailToAdd = new BookDetailToAdd(
                     title: bookTitle, ISBN: bookISBN, description: bookDescription,
                   );
-                  var result = createBookToAdd("http://localhost:8080/books", bookDetail.toMap());
+                  var result = createBookToAdd("http://localhost:8080/books", bookDetailToAdd.toMap());
 
                   // try catchのcatchでexceptionで拾わなかった、asyncが原因かも、要相談
 //                  if(result == null){

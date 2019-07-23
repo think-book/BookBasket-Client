@@ -47,6 +47,7 @@ class BookListScreen extends StatefulWidget {
 
 class BookListScreenState extends State<BookListScreen> {
   List<Book> serverResponse = [];
+  static const Alignment my_bottomRight = Alignment(0.9, 0.9);
 
   @override
   void initState() {
@@ -69,7 +70,7 @@ class BookListScreenState extends State<BookListScreen> {
         ),
 
         Align(
-          alignment: Alignment.bottomRight,
+          alignment: my_bottomRight,
           child: new FloatingActionButton(
               child: new Icon(Icons.add_box),
               onPressed: () => {
