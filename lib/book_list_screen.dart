@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+import 'package:bookbasket/api/client.dart';
 
 //　次のページ
 import 'package:bookbasket/book_detail_screen.dart';
@@ -24,17 +24,6 @@ class Book {
       title: json['title'],
       ISBN: json['ISBN'],
     );
-  }
-}
-
-Future<List<Book>> fetchBooksList() async {
-  final response = await http.get('http://localhost:8080/books');
-  //　コンソールに出力する用
-  print(response.body);
-  if (response.statusCode == 200) {
-    Iterable l = jsonDecode(response.body);
-    List<Book> books = l.map((model) => Book.fromJson(model)).toList();
-    return books;
   }
 }
 
@@ -93,7 +82,8 @@ class BookListScreenState extends State<BookListScreen> {
   }
 
   makeGetRequest() async {
-    List<Book> response = await fetchBooksList();
+    var client = new BookClient();
+    List<Book> response = await client.getBooks();
     setState(() {
       serverResponse = response;
     });
