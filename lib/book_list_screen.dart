@@ -63,29 +63,29 @@ class BookListScreenState extends State<BookListScreen> {
           child: new GridView.count(
             crossAxisCount: 2,
             children: List.generate(serverResponse.length, (index) {
-              return StructuredGridCell(
-                  context, serverResponse[index].title, serverResponse[index].ISBN);
+              return StructuredGridCell(context, serverResponse[index].title,
+                  serverResponse[index].ISBN);
             }),
           ),
         ),
-
         Align(
           alignment: my_bottomRight,
           child: new FloatingActionButton(
               child: new Icon(Icons.add_box),
               onPressed: () => {
-              Navigator.of(context)
-                  .push(new MaterialPageRoute<String>(builder: (context) => BookAddScreen(),))
-                  .then((String value) {
-                print(value);
-                if (value == 'magic'){
-                  setState(() {
-                    initState();
-                  });
-                }
-              }),
-              }
-          ),
+                    Navigator.of(context)
+                        .push(new MaterialPageRoute<String>(
+                      builder: (context) => BookAddScreen(),
+                    ))
+                        .then((String value) {
+                      print(value);
+                      if (value == 'magic') {
+                        setState(() {
+                          initState();
+                        });
+                      }
+                    }),
+                  }),
         ),
       ],
     );

@@ -8,8 +8,7 @@ class BookAddScreen extends StatefulWidget {
   int bookISBN;
 
   @override
-  BookAddScreenState createState() =>
-      new BookAddScreenState();
+  BookAddScreenState createState() => new BookAddScreenState();
 }
 
 class BookAddScreenState extends State<BookAddScreen> {
@@ -21,7 +20,7 @@ class BookAddScreenState extends State<BookAddScreen> {
 
   BookAddScreenState();
 
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
     return Material(
       child: Column(
         children: <Widget>[
@@ -29,52 +28,52 @@ class BookAddScreenState extends State<BookAddScreen> {
           formBuilder(),
         ],
       ),
-
     );
   }
 
-  Stack fancyHeader(){
-    return Stack( children: <Widget>[
-      Container(
-        height: MediaQuery.of(context).size.height * 0.15,
-        width: MediaQuery.of(context).size.width,
-        decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                Color(0xffd399c1),
-                Color(0xff9b5acf),
-                Color(0xff611cdf),
-              ],
-            ),
-            borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(30),
-              bottomRight: Radius.circular(30),
-            )),
-      ),
-      AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0.0,
-        title: Text("Add a new book"),
-      ),
-      Positioned(
-        top: MediaQuery.of(context).size.height * 0.15,
-        left: 20,
-        right: MediaQuery.of(context).size.width * 0.3,
-        child: Text(
-          bookDescription,
-          style: TextStyle(
-            color: Colors.white70,
-            fontSize: 22,
-          ),
+  Stack fancyHeader() {
+    return Stack(
+      children: <Widget>[
+        Container(
+          height: MediaQuery.of(context).size.height * 0.15,
+          width: MediaQuery.of(context).size.width,
+          decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  Color(0xffd399c1),
+                  Color(0xff9b5acf),
+                  Color(0xff611cdf),
+                ],
+              ),
+              borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(30),
+                bottomRight: Radius.circular(30),
+              )),
         ),
-      )
-    ],
+        AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0.0,
+          title: Text("Add a new book"),
+        ),
+        Positioned(
+          top: MediaQuery.of(context).size.height * 0.15,
+          left: 20,
+          right: MediaQuery.of(context).size.width * 0.3,
+          child: Text(
+            bookDescription,
+            style: TextStyle(
+              color: Colors.white70,
+              fontSize: 22,
+            ),
+          ),
+        )
+      ],
     );
   }
 
-  Form formBuilder(){
+  Form formBuilder() {
     return Form(
-    key: _formKey,
+      key: _formKey,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
@@ -92,7 +91,7 @@ class BookAddScreenState extends State<BookAddScreen> {
               }
               return null;
             },
-            onSaved: (value){
+            onSaved: (value) {
               bookTitle = value;
             },
           ),
@@ -105,13 +104,14 @@ class BookAddScreenState extends State<BookAddScreen> {
             ),
             autovalidate: true,
             validator: (value) {
-
-              if (value.isEmpty | (value.length!=13) | (int.tryParse(value)==null)) {
+              if (value.isEmpty |
+                  (value.length != 13) |
+                  (int.tryParse(value) == null)) {
                 return 'Enter a 13-digit ISBN.';
               }
               return null;
             },
-            onSaved: (value){
+            onSaved: (value) {
               bookISBN = value; //int.parse(value);
             },
           ),
@@ -129,7 +129,7 @@ class BookAddScreenState extends State<BookAddScreen> {
               }
               return null;
             },
-            onSaved: (value){
+            onSaved: (value) {
               bookDescription = value;
             },
           ),
@@ -137,15 +137,17 @@ class BookAddScreenState extends State<BookAddScreen> {
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 16.0),
             child: RaisedButton(
-              onPressed: (){
+              onPressed: () {
                 // Validate returns true if the form is valid, or false otherwise.
-                if (_formKey.currentState.validate() ){
-
+                if (_formKey.currentState.validate()) {
                   _formKey.currentState.save();
                   BookDetailToAdd bookDetailToAdd = new BookDetailToAdd(
-                    title: bookTitle, ISBN: bookISBN, description: bookDescription,
+                    title: bookTitle,
+                    ISBN: bookISBN,
+                    description: bookDescription,
                   );
-                  var result = createBookToAdd("http://localhost:8080/books", bookDetailToAdd.toMap());
+                  var result = createBookToAdd(
+                      "http://localhost:8080/books", bookDetailToAdd.toMap());
 
                   // try catchのcatchでexceptionで拾わなかった、asyncが原因かも、要相談
 //                  if(result == null){
