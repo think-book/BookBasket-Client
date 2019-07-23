@@ -31,7 +31,6 @@ class BookDetail {
   }
 }
 
-
 class ThreadList {
   final List<Thread> forums;
 
@@ -70,27 +69,27 @@ class Thread {
   }
 }
 
-class ThreadToAdd {
-  final String userId;
-  final String title;
-
-  ThreadToAdd({this.userId, this.title});
-
-  factory ThreadToAdd.fromJson(Map<String, dynamic> json) {
-    return ThreadToAdd(
-      userId: json['userId'],
-      title: json['title'],
-    );
-  }
-
-  Map toMap() {
-    var map = new Map<String, dynamic>();
-    map["userId"] = userId;
-    map["title"] = title;
-
-    return map;
-  }
-}
+//class ThreadToAdd {
+//  final String userId;
+//  final String title;
+//
+//  ThreadToAdd({this.userId, this.title});
+//
+//  factory ThreadToAdd.fromJson(Map<String, dynamic> json) {
+//    return ThreadToAdd(
+//      userId: json['userId'],
+//      title: json['title'],
+//    );
+//  }
+//
+//  Map toMap() {
+//    var map = new Map<String, dynamic>();
+//    map["userId"] = userId;
+//    map["title"] = title;
+//
+//    return map;
+//  }
+//}
 
 buildContainerTop(BuildContext context) {
   return (Container(
@@ -143,14 +142,14 @@ buildContainerMiddle(BuildContext context, List<Thread> forums, int index) {
       ),
       child: ListTile(
         leading: const Icon(Icons.account_circle),
-        title: Text('user: ${forums[index].id}'),
+        title: Text('user: ${forums[index].userID}'),
         subtitle: Text(forums[index].title),
         onTap: () {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) =>
-                  ThreadScreen(title: forums[index].title, id: forums[index].id),
+              builder: (context) => ThreadScreen(
+                  title: forums[index].title, id: forums[index].id),
             ), /* react to the tile being tapped */
           );
         },

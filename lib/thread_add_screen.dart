@@ -1,31 +1,34 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import 'package:bookbasket/book_add.dart';
+import 'package:bookbasket/thread_add.dart';
 
-class BookAddScreen extends StatefulWidget {
-  String bookTitle;
+class ThreadAddScreen extends StatefulWidget {
   int bookISBN;
 
+  ThreadAddScreen({@required this.bookISBN});
+
   @override
-  BookAddScreenState createState() => new BookAddScreenState();
+  ThreadAddScreenState createState() =>
+      new ThreadAddScreenState(bookISBN: bookISBN);
 }
 
-class BookAddScreenState extends State<BookAddScreen> {
-  String bookTitle;
-  String bookISBN;
-  String bookDescription = "";
+class ThreadAddScreenState extends State<ThreadAddScreen> {
+  String threadTitle;
+  String message;
+  final int bookISBN;
 
   final _formKey = GlobalKey<FormState>();
 
-  BookAddScreenState();
+  ThreadAddScreenState({@required this.bookISBN});
 
   Widget build(BuildContext context) {
     return Material(
       child: Column(
         children: <Widget>[
           fancyHeader(),
-          formBuilder(),
+          new Expanded(child: formBuilder()),
+          //formBuilder(),
         ],
       ),
     );
@@ -53,14 +56,14 @@ class BookAddScreenState extends State<BookAddScreen> {
         AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0.0,
-          title: Text("Add a new book"), //　色を白にしたい
+          title: Text("Add a new thread"), //　色を白にしたい
         ),
         Positioned(
           top: MediaQuery.of(context).size.height * 0.15,
           left: 20,
           right: MediaQuery.of(context).size.width * 0.3,
           child: Text(
-            bookDescription,
+            "hi",
             style: TextStyle(
               color: Colors.white70,
               fontSize: 22,
@@ -81,7 +84,7 @@ class BookAddScreenState extends State<BookAddScreen> {
           TextFormField(
             decoration: const InputDecoration(
               icon: Icon(Icons.book),
-              hintText: 'Enter the title of the book.',
+              hintText: 'Enter a title',
               labelText: 'Title:',
             ),
             autovalidate: true,
@@ -92,45 +95,27 @@ class BookAddScreenState extends State<BookAddScreen> {
               return null;
             },
             onSaved: (value) {
-              bookTitle = value;
+              this.threadTitle = value;
             },
           ),
 
           TextFormField(
+            keyboardType: TextInputType.multiline,
+            maxLines: 10,
             decoration: const InputDecoration(
               icon: Icon(Icons.confirmation_number),
-              hintText: 'Enter the 13 digit ISBN of the book.',
-              labelText: 'ISBN:',
-            ),
-            autovalidate: true,
-            validator: (value) {
-              if (value.isEmpty |
-                  (value.length != 13) |
-                  (int.tryParse(value) == null)) {
-                return 'Enter a 13-digit ISBN.';
-              }
-              return null;
-            },
-            onSaved: (value) {
-              bookISBN = value; //int.parse(value);
-            },
-          ),
-
-          TextFormField(
-            decoration: const InputDecoration(
-              icon: Icon(Icons.description),
-              hintText: 'Enter some description of the book.',
-              labelText: 'Description:',
+              hintText: 'Enter a message.',
+              labelText: 'Message',
             ),
             autovalidate: true,
             validator: (value) {
               if (value.isEmpty) {
-                return 'Enter some text.';
+                return 'Enter a message';
               }
               return null;
             },
             onSaved: (value) {
-              bookDescription = value;
+              this.message = value; //int.parse(value);
             },
           ),
 
@@ -142,22 +127,11 @@ class BookAddScreenState extends State<BookAddScreen> {
                 // Validate returns true if the form is valid, or false otherwise.
                 if (_formKey.currentState.validate()) {
                   _formKey.currentState.save();
-                  BookDetailToAdd bookDetailToAdd = new BookDetailToAdd(
-                    title: bookTitle,
-                    ISBN: bookISBN,
-                    description: bookDescription,
-                  );
 
-                  try {
-                    var result = await createBookToAdd(
-                        "http://localhost:8080/books", bookDetailToAdd.toMap());
-                  } on BookAddException catch (e) {
-                    print(e.errorMessage());
-                    // ここでdialogとか表示したい
-                  }
-
-                  Navigator.of(context).pop('magic');
+                  addThread(bookISBN, this.threadTitle);
                 }
+
+                Navigator.of(context).pop('addedthread!');
               },
               child: const Text('Register'),
             ),
