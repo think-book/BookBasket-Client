@@ -138,7 +138,7 @@ class BookAddScreenState extends State<BookAddScreen> {
             padding: const EdgeInsets.symmetric(vertical: 16.0),
             child: RaisedButton(
               color: Color(0xff9b5acf),
-              onPressed: () {
+              onPressed: () async {
                 // Validate returns true if the form is valid, or false otherwise.
                 if (_formKey.currentState.validate()) {
                   _formKey.currentState.save();
@@ -147,13 +147,16 @@ class BookAddScreenState extends State<BookAddScreen> {
                     ISBN: bookISBN,
                     description: bookDescription,
                   );
-                  var result = createBookToAdd(
-                      "http://localhost:8080/books", bookDetailToAdd.toMap());
 
-                  // try catchのcatchでexceptionで拾わなかった、asyncが原因かも、要相談
-//                  if(result == null){
-//                    print("Book failed to add."); // show book was not added message
-//                  }
+                  try{
+                    var result = await createBookToAdd(
+                        "http://localhost:8080/books", bookDetailToAdd.toMap());
+                  }
+                  on BookAddException catch(e){
+                    print(e.errorMessage());
+                    // ここでdialogとか表示したい
+                  }
+
                   Navigator.of(context).pop('magic');
                 }
               },

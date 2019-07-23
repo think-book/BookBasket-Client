@@ -39,6 +39,11 @@ Future<BookDetailToAdd> createBookToAdd(String url, Map body) async {
   }
 
   print(response.body);
-  return null;
-//  throw new Exception("Failed to create a post.");
+  throw new BookAddException();
+}
+
+class BookAddException implements Exception {
+  String errorMessage() {
+    return 'Failed to add book.';
+  }
 }
