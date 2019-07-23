@@ -6,21 +6,6 @@ import 'package:bookbasket/api/client.dart';
 //　次のページ
 import 'package:bookbasket/book_detail_screen.dart';
 
-class BooksList {
-  final List<Book> books;
-
-  BooksList({
-    this.books,
-  });
-
-  factory BooksList.fromJson(List<dynamic> parsedJson) {
-    List<Book> books = new List<Book>();
-    books = parsedJson.map((i) => Book.fromJson(i)).toList();
-
-    return new BooksList(books: books);
-  }
-}
-
 class Book {
   final int id;
   final String title;
@@ -41,14 +26,14 @@ class Book {
   }
 }
 
-class BodyWidget extends StatefulWidget {
+class BookListScreen extends StatefulWidget {
   @override
-  BodyWidgetState createState() {
-    return new BodyWidgetState();
+  BookListScreenState createState() {
+    return new BookListScreenState();
   }
 }
 
-class BodyWidgetState extends State<BodyWidget> {
+class BookListScreenState extends State<BookListScreen> {
   List<Book> serverResponse = [];
 
   @override

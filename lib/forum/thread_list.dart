@@ -7,20 +7,18 @@ import 'package:bookbasket/api/client.dart';
 
 // スレッドのListViewを返すWidget
 class ThreadList extends StatefulWidget {
-  final int threadId;
+  final int id;
 
-  ThreadList({@required this.threadId});
+  ThreadList({@required this.id});
+
   @override
-  State<StatefulWidget> createState() {
-    return ThreadListState(threadId: threadId);
-  }
+  ThreadListState createState() => new ThreadListState(id: id);
 }
 
 class ThreadListState extends State<ThreadList> {
   List<ThreadMessage> messages = [];
-  final int threadId;
-
-  ThreadListState({@required this.threadId});
+  final int id;
+  ThreadListState({@required this.id});
 
   @override
   void initState() {
@@ -49,7 +47,7 @@ class ThreadListState extends State<ThreadList> {
 
   void _getThreadMessage() async {
     var client = new BookClient();
-    var messages = await client.getThreadMessages(threadId);
+    var messages = await client.getThreadMessages(id);
     setState(() {
       this.messages = messages;
     });

@@ -3,13 +3,9 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:bookbasket/api/client.dart';
-import 'package:bookbasket/forum/thread_info.dart';
 
 // 使っている関数、クラスなど
 import 'package:bookbasket/book_detail.dart';
-
-//次のページ
-import 'package:bookbasket/forum/thread_screen.dart';
 
 class DetailScreen extends StatefulWidget {
   final String bookTitle;
@@ -26,54 +22,28 @@ class DetailScreenState extends State<DetailScreen> {
   final String bookTitle;
   final int bookISBN;
   String bookDescription = "";
-  List<Forum> forums = [];
+  List<Thread> forums = [];
+
+  TextEditingController titleControler = new TextEditingController();
 
   @override
   void initState() {
-    makeGetRequest();
+    getThread();
+    getBookDetail();
   }
 
   DetailScreenState({@required this.bookTitle, @required this.bookISBN});
 
   Widget build(BuildContext context) {
+    var client = new BookClient();
     return Material(
       child: Column(
         children: <Widget>[
           Stack(
             children: <Widget>[
-              Container(
-                height: MediaQuery.of(context).size.height * 0.3,
-                width: MediaQuery.of(context).size.width,
-                decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        Color(0xffd399c1),
-                        Color(0xff9b5acf),
-                        Color(0xff611cdf),
-                      ],
-                    ),
-                    borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(30),
-                      bottomRight: Radius.circular(30),
-                    )),
-              ),
-              AppBar(
-                backgroundColor: Colors.transparent,
-                elevation: 0.0,
-                title: Text(bookTitle),
-              ),
-              Positioned(
-                top: MediaQuery.of(context).size.height * 0.15,
-                left: 20,
-                right: MediaQuery.of(context).size.width * 0.3,
-                child: Text(
-                  bookDescription,
-                  style: TextStyle(
-                    color: Colors.white70,
-                    fontSize: 22,
-                  ),
-                ),
-              )
+              buildContainerTop(context),
+              buildAppbar(context, bookTitle),
+              buildPositioned(context, bookDescription),
             ],
           ),
           Padding(
@@ -90,41 +60,55 @@ class DetailScreenState extends State<DetailScreen> {
           Expanded(
               child: ListView.builder(
                   itemBuilder: (BuildContext context, int index) {
-                    return Container(
-                        decoration: BoxDecoration(
-                          border: Border(
-                            bottom: BorderSide(color: Colors.black38),
-                          ),
-                        ),
-                        child: ListTile(
-                          leading: const Icon(Icons.account_circle),
-                          title: Text('user: ${forums[index].id}'),
-                          subtitle: Text(forums[index].title),
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => ThreadScreen(
-                                    info: ThreadInfo(
-                                        title: forums[index].title,
-                                        id: forums[index].id)),
-                              ), /* react to the tile being tapped */
-                            );
-                          },
-                        ));
+                    // ここで次のページに行く
+                    return buildContainerMiddle(context, forums, index);
                   },
                   itemCount: forums.length)),
+          // ここ以下はsetState()をしているので外に出しにくい気がしたので出してません
+          Padding(
+            padding: const EdgeInsets.all(25.0),
+            child: new Column(
+              children: <Widget>[
+                new TextField(
+                  controller: titleControler,
+                  decoration: InputDecoration(
+                      hintText: "スレッドの題名を入力", labelText: 'Thread Title'),
+                ),
+                new RaisedButton(
+                  onPressed: () async {
+                    // ユーザー登録が実装されたらuserID: userID.toString() とかしてURLを変える
+                    ThreadToAdd newThreadToAdd = new ThreadToAdd(
+                        userId: "1", title: titleControler.text);
+                    client.postThread(
+                            bookISBN.toString(),
+                            newThreadToAdd: newThreadToAdd
+                        );
+                    setState(() {
+                      getThread();
+                      titleControler.text = "";
+                    });
+                  },
+                  child: const Text("スレッド追加"),
+                )
+              ],
+            ),
+          ),
         ],
       ),
     );
   }
 
-  makeGetRequest() async {
+  getThread() async {
     var client = new BookClient();
-    List<Forum> forums = await client.getForum(bookISBN.toString());
+    List<Thread> forums = await client.getThreadList(bookISBN.toString());
+    setState(() {
+        this.forums = forums;
+    });
+  }
+  getBookDetail() async {
+    var client = new BookClient();
     BookDetail detail = await client.getBookDetail(bookISBN.toString());
     setState(() {
-      this.forums = forums;
       bookDescription = detail.description;
     });
   }

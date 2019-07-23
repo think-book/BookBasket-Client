@@ -1,6 +1,6 @@
 import 'package:http/http.dart' as http;
 import 'dart:io';
-import 'package:bookbasket/book_list.dart';
+import 'package:bookbasket/book_list_screen.dart';
 import 'package:bookbasket/book_detail.dart';
 import 'package:bookbasket/forum/thread_message.dart';
 import 'dart:convert';
@@ -33,14 +33,25 @@ class BookClient {
   }
 
   // フォーラム取得
-  Future<List<Forum>> getForum(String ISBN) async {
+  Future<List<Thread>> getThreadList(String ISBN) async {
     final response = await _client.get(rootURL + BOOKS + '/' + ISBN + THREADS);
     if (response.statusCode == 200) {
       Iterable l = jsonDecode(response.body);
-      List<Forum> forums = l.map((model) => Forum.fromJson(model)).toList();
-      return forums;
+      List<Thread> threads = l.map((model) => Thread.fromJson(model)).toList();
+      return threads;
     }
-    print('ここには来ない');
+  }
+
+  // スレッド追加
+  Future<ThreadToAdd> postThread(String ISBN, {ThreadToAdd newThreadToAdd}) async {
+    var body = newThreadToAdd.toMap();
+    final response = await _client.post(rootURL + BOOKS + '/' + ISBN + THREADS, body: body);
+    print(response.body);
+    if (response.statusCode == 200) {
+      return ThreadToAdd.fromJson(json.decode(response.body));
+    } else {
+      throw new Exception("Error while fetching data");
+    }
   }
 
   // 本の詳細取得
