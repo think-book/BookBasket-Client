@@ -75,6 +75,7 @@ class DetailScreenState extends State<DetailScreen> {
                       hintText: "スレッドの題名を入力", labelText: 'Thread Title'),
                 ),
                 new RaisedButton(
+                  textColor: Colors.white,
                   onPressed: () async {
                     // ユーザー登録が実装されたらuserID: userID.toString() とかしてURLを変える
                     ThreadToAdd newThreadToAdd = new ThreadToAdd(
@@ -88,7 +89,24 @@ class DetailScreenState extends State<DetailScreen> {
                       titleControler.text = "";
                     });
                   },
-                  child: const Text("スレッド追加"),
+                  padding: const EdgeInsets.all(0.0),
+//                  child: const Text("スレッド追加"),
+                  child: Container(
+                    decoration: const BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: <Color>[
+                          Color(0xffd399c1),
+                          Color(0xff9b5acf),
+                          Color(0xff611cdf),
+                        ],
+                      ),
+                    ),
+                    padding: const EdgeInsets.all(10.0),
+                    child: const Text(
+                        'スレッド追加',
+                        style: TextStyle(fontSize: 20)
+                    ),
+                  ),
                 )
               ],
             ),
