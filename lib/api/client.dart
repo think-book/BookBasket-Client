@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:bookbasket/book_list_screen.dart';
 import 'package:bookbasket/book_detail.dart';
 import 'package:bookbasket/forum/thread_message.dart';
+import 'package:bookbasket/book_add.dart';
 import 'package:bookbasket/thread_add.dart';
 import 'dart:convert';
 
@@ -38,6 +39,21 @@ class BookClient {
       return books;
     }
   }
+
+  // 本追加
+  Future<BookDetailToAdd> postBook(BookDetailToAdd bookDetailToAdd) async {
+    var url = rootURL + BOOKS;
+    var body = bookDetailToAdd.toMap();
+    final response = await _client.post(url, body: body);
+
+    if (response.statusCode == 200) {
+      return BookDetailToAdd.fromJson(json.decode(response.body));
+    }
+
+    print(response.body);
+    throw new BookAddException();
+  }
+
 
   // フォーラム取得
   Future<List<Thread>> getThreadList(String ISBN) async {
