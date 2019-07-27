@@ -9,7 +9,7 @@ import 'dart:convert';
 
 class ThreadAddException implements Exception {
   String errorMessage() {
-    return 'Failed to add book.';
+    return 'Failed to add a thread.';
   }
 }
 

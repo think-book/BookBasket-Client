@@ -26,10 +26,10 @@ class ThreadToAdd {
   }
 }
 
-Future<ThreadToAdd> addThread(int bookISBN, String title) async {
+Future<ThreadToAdd> addThread(int bookISBN, int userID, String title) async {
   var client = new BookClient();
 
-  ThreadToAdd newThreadToAdd = new ThreadToAdd(userId: "1", title: title);
+  ThreadToAdd newThreadToAdd = new ThreadToAdd(userId: userID.toString(), title: title);
 
   try {
     client.postThread(bookISBN, newThreadToAdd: newThreadToAdd);
