@@ -6,6 +6,7 @@ import 'package:bookbasket/api/client.dart';
 
 // 使っている関数、クラスなど
 import 'package:bookbasket/book_detail.dart';
+import 'package:bookbasket/thread_add_screen.dart';
 
 class DetailScreen extends StatefulWidget {
   final String bookTitle;
@@ -66,51 +67,25 @@ class DetailScreenState extends State<DetailScreen> {
                   itemCount: forums.length)),
           // ここ以下はsetState()をしているので外に出しにくい気がしたので出してません
           Padding(
-            padding: const EdgeInsets.all(25.0),
-            child: new Column(
-              children: <Widget>[
-                new TextField(
-                  controller: titleControler,
-                  decoration: InputDecoration(
-                      hintText: "スレッドの題名を入力", labelText: 'Thread Title'),
-                ),
-                new RaisedButton(
-                  textColor: Colors.white,
-                  onPressed: () async {
-                    // ユーザー登録が実装されたらuserID: userID.toString() とかしてURLを変える
-                    ThreadToAdd newThreadToAdd = new ThreadToAdd(
-                        userId: "1", title: titleControler.text);
-                    client.postThread(
-                            bookISBN.toString(),
-                            newThreadToAdd: newThreadToAdd
-                        );
-                    setState(() {
-                      getThread();
-                      titleControler.text = "";
-                    });
-                  },
-                  padding: const EdgeInsets.all(0.0),
-//                  child: const Text("スレッド追加"),
-                  child: Container(
-                    decoration: const BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: <Color>[
-                          Color(0xffd399c1),
-                          Color(0xff9b5acf),
-                          Color(0xff611cdf),
-                        ],
-                      ),
-                    ),
-                    padding: const EdgeInsets.all(10.0),
-                    child: const Text(
-                        'スレッド追加',
-                        style: TextStyle(fontSize: 20)
-                    ),
-                  ),
-                )
-              ],
-            ),
-          ),
+              padding: const EdgeInsets.all(25.0),
+              child: FloatingActionButton(
+                  child: new Icon(Icons.add_box),
+                  backgroundColor: Color(0xff9b5acf),
+                  onPressed: () => {
+                        Navigator.of(context)
+                            .push(new MaterialPageRoute<String>(
+                          builder: (context) =>
+                              ThreadAddScreen(bookISBN: bookISBN),
+                        ))
+                            .then((String value) {
+                          print(value);
+                          if (value == 'addedthread!') {
+                            setState(() {
+                              initState();
+                            });
+                          }
+                        }),
+                      })),
         ],
       ),
     );
@@ -120,14 +95,15 @@ class DetailScreenState extends State<DetailScreen> {
     var client = new BookClient();
     List<Thread> forums = await client.getThreadList(bookISBN.toString());
     setState(() {
-        this.forums = forums;
+      this.forums = forums;
     });
   }
+
   getBookDetail() async {
     var client = new BookClient();
     BookDetail detail = await client.getBookDetail(bookISBN.toString());
     setState(() {
-      bookDescription = detail.description;
+      this.bookDescription = detail.description;
     });
   }
 }
