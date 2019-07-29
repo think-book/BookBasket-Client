@@ -22,6 +22,7 @@ class ThreadListState extends State<ThreadList> {
   int _maxLines;
   final int id;
   final int userId = 1;
+  final _formKey = GlobalKey<FormState>();
   ThreadListState({@required this.id});
 
   @override
@@ -77,6 +78,12 @@ class ThreadListState extends State<ThreadList> {
         decoration: const InputDecoration(
           hintText: 'Enter a message',
         ),
+        validator: (value) {
+          if (value.isEmpty) {
+            return 'Enter a message';
+          }
+          return null;
+        },
         maxLines: _maxLines,
         keyboardType: TextInputType.multiline,
         textInputAction: TextInputAction.newline,
@@ -85,14 +92,24 @@ class ThreadListState extends State<ThreadList> {
           margin: const EdgeInsets.symmetric(horizontal: 4.0),
           child: new IconButton(
             icon: new Icon(Icons.send),
-            onPressed: () => _handleSubmit(_textEditingController.text),
+            onPressed: () {
+              // Validate returns true if the form is valid, otherwise false.
+              if (_formKey.currentState.validate()) {
+                _textEditingController
+                  ..clearComposing()
+                  ..clear();
+                _handleSubmit(_textEditingController.text);
+              }
+            },
           ))
     ]);
 
-    var decorated = Container(
-            color: Colors.grey[100],
-            child: field,
-    );
+    var form = Form(
+            key: _formKey,
+            child: Container(
+              color: Colors.grey[100],
+              child: field,
+            ));
 
     return Stack(children: <Widget>[
       listview,
@@ -104,15 +121,12 @@ class ThreadListState extends State<ThreadList> {
         left: 0.0,
         right: 0.0,
         bottom: .0,
-        child: decorated,
+        child: form,
       )
     ]);
   }
 
   void _handleSubmit(String message) async {
-      _textEditingController
-              ..clearComposing()
-              ..clear();
       var client = new BookClient();
       MessageToAdd newMessageToAdd = new MessageToAdd(
         userId: userId,
