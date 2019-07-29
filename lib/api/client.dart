@@ -4,7 +4,14 @@ import 'package:bookbasket/book_list_screen.dart';
 import 'package:bookbasket/book_detail.dart';
 import 'package:bookbasket/forum/thread_message.dart';
 import 'package:bookbasket/book_add.dart';
+import 'package:bookbasket/thread_add.dart';
 import 'dart:convert';
+
+class ThreadAddException implements Exception {
+  String errorMessage() {
+    return 'Failed to add a thread.';
+  }
+}
 
 class BookClient {
   http.Client _client;
@@ -38,11 +45,11 @@ class BookClient {
     var url = rootURL + BOOKS;
     var body = bookDetailToAdd.toMap();
     final response = await _client.post(url, body: body);
-  
+
     if (response.statusCode == 200) {
       return BookDetailToAdd.fromJson(json.decode(response.body));
     }
-  
+
     print(response.body);
     throw new BookAddException();
   }
@@ -59,14 +66,15 @@ class BookClient {
   }
 
   // スレッド追加
-  Future<ThreadToAdd> postThread(String ISBN, {ThreadToAdd newThreadToAdd}) async {
+  Future<ThreadToAdd> postThread(int ISBN, {ThreadToAdd newThreadToAdd}) async {
     var body = newThreadToAdd.toMap();
-    final response = await _client.post(rootURL + BOOKS + '/' + ISBN + THREADS, body: body);
+    final response = await _client
+        .post(rootURL + BOOKS + '/' + ISBN.toString() + THREADS, body: body);
     print(response.body);
     if (response.statusCode == 200) {
       return ThreadToAdd.fromJson(json.decode(response.body));
     } else {
-      throw new Exception("Error while fetching data");
+      throw new ThreadAddException();
     }
   }
 
