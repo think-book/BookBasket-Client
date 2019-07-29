@@ -89,6 +89,11 @@ class ThreadListState extends State<ThreadList> {
           ))
     ]);
 
+    var decorated = Container(
+            color: Colors.grey[100],
+            child: field,
+    );
+
     return Stack(children: <Widget>[
       listview,
       new Divider(
@@ -99,7 +104,7 @@ class ThreadListState extends State<ThreadList> {
         left: 0.0,
         right: 0.0,
         bottom: .0,
-        child: field,
+        child: decorated,
       )
     ]);
   }
