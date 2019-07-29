@@ -44,7 +44,6 @@ class BookClient {
       return BookDetailToAdd.fromJson(json.decode(response.body));
     }
   
-    print(response.body);
     throw new BookAddException();
   }
 
@@ -63,7 +62,6 @@ class BookClient {
   Future<ThreadToAdd> postThread(String ISBN, {ThreadToAdd newThreadToAdd}) async {
     var body = newThreadToAdd.toMap();
     final response = await _client.post(rootURL + BOOKS + '/' + ISBN + THREADS, body: body);
-    print(response.body);
     if (response.statusCode == 200) {
       return ThreadToAdd.fromJson(json.decode(response.body));
     } else {
@@ -97,7 +95,6 @@ class BookClient {
   Future<MessageToAdd> postMessage(int threadId, {MessageToAdd newMessageToAdd}) async {
       var body = newMessageToAdd.toMap();
       final response = await _client.post(rootURL + THREADS + '/' + threadId.toString(), body: body);
-      print(response.body);
       if(response.statusCode == 200) {
           return MessageToAdd.fromJson(json.decode(response.body));
       } else {
