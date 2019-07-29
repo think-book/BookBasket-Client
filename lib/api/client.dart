@@ -6,6 +6,7 @@ import 'package:bookbasket/book_detail.dart';
 import 'package:bookbasket/book_list_screen.dart';
 import 'package:bookbasket/forum/message_to_add.dart';
 import 'package:bookbasket/forum/thread_message.dart';
+import 'package:bookbasket/forum/message_post_exception.dart';
 
 class BookClient {
   http.Client _client;
@@ -98,7 +99,7 @@ class BookClient {
       if(response.statusCode == 200) {
           return MessageToAdd.fromJson(json.decode(response.body));
       } else {
-          throw new Exception('Error while fetching data');
+          throw new MessagePostException();
       }
   }
 }

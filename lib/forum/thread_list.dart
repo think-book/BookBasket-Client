@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:bookbasket/forum/thread_message.dart';
 import 'package:bookbasket/api/client.dart';
 import 'package:bookbasket/forum/message_to_add.dart';
+import 'package:bookbasket/forum/message_post_exception.dart';
 
 // スレッドのListViewを返すWidget
 class ThreadList extends StatefulWidget {
@@ -95,10 +96,10 @@ class ThreadListState extends State<ThreadList> {
             onPressed: () {
               // Validate returns true if the form is valid, otherwise false.
               if (_formKey.currentState.validate()) {
+                _handleSubmit(_textEditingController.text);
                 _textEditingController
                   ..clearComposing()
                   ..clear();
-                _handleSubmit(_textEditingController.text);
               }
             },
           ))
@@ -135,8 +136,9 @@ class ThreadListState extends State<ThreadList> {
 
       try {
         var result = await client.postMessage(id, newMessageToAdd: newMessageToAdd);
-      } on Exception catch (e) {
-        print(e);
+        _getThreadMessage();
+      } on MessagePostException catch (e) {
+        print(e.errorMessage());
         // ここでdialogとか表示したい
       }
   }
