@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-
+import 'package:bookbasket/api/client.dart';
 import 'package:bookbasket/book_add.dart';
 
 class BookAddScreen extends StatefulWidget {
@@ -72,6 +72,7 @@ class BookAddScreenState extends State<BookAddScreen> {
   }
 
   Form formBuilder() {
+    var client = new BookClient();
     return Form(
       key: _formKey,
       child: Column(
@@ -148,10 +149,10 @@ class BookAddScreenState extends State<BookAddScreen> {
                     description: bookDescription,
                   );
 
-                  try {
-                    var result = await createBookToAdd(
-                        "http://localhost:8080/books", bookDetailToAdd.toMap());
-                  } on BookAddException catch (e) {
+                  try{
+                    var result = await client.postBook(bookDetailToAdd);
+                  }
+                  on BookAddException catch(e){
                     print(e.errorMessage());
                     // ここでdialogとか表示したい
                   }

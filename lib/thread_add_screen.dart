@@ -38,6 +38,7 @@ class ThreadAddScreenState extends State<ThreadAddScreen> {
     return Stack(
       children: <Widget>[
         Container(
+
           height: MediaQuery.of(context).size.height * 0.15,
           width: MediaQuery.of(context).size.width,
           decoration: BoxDecoration(
@@ -128,7 +129,8 @@ class ThreadAddScreenState extends State<ThreadAddScreen> {
                 if (_formKey.currentState.validate()) {
                   _formKey.currentState.save();
 
-                  addThread(bookISBN, this.threadTitle);
+                  // userID が実装されたら真ん中の引数をuserIDに変える
+                  addThread(bookISBN, 1, this.threadTitle);
                 }
 
                 Navigator.of(context).pop('addedthread!');

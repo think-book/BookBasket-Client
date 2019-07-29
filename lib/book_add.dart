@@ -31,17 +31,6 @@ class BookDetailToAdd {
   }
 }
 
-Future<BookDetailToAdd> createBookToAdd(String url, Map body) async {
-  final response = await http.post(url, body: body);
-
-  if (response.statusCode == 200) {
-    return BookDetailToAdd.fromJson(json.decode(response.body));
-  }
-
-  print(response.body);
-  throw new BookAddException();
-}
-
 class BookAddException implements Exception {
   String errorMessage() {
     return 'Failed to add book.';
