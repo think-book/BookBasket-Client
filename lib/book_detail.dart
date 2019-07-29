@@ -69,28 +69,6 @@ class Thread {
   }
 }
 
-//class ThreadToAdd {
-//  final String userId;
-//  final String title;
-//
-//  ThreadToAdd({this.userId, this.title});
-//
-//  factory ThreadToAdd.fromJson(Map<String, dynamic> json) {
-//    return ThreadToAdd(
-//      userId: json['userId'],
-//      title: json['title'],
-//    );
-//  }
-//
-//  Map toMap() {
-//    var map = new Map<String, dynamic>();
-//    map["userId"] = userId;
-//    map["title"] = title;
-//
-//    return map;
-//  }
-//}
-
 buildContainerTop(BuildContext context) {
   return (Container(
     height: MediaQuery.of(context).size.height * 0.3,
