@@ -4,6 +4,8 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:bookbasket/forum/thread_message.dart';
 import 'package:bookbasket/api/client.dart';
+import 'package:bookbasket/forum/message_to_add.dart';
+import 'package:bookbasket/forum/message_post_exception.dart';
 
 // スレッドのListViewを返すWidget
 class ThreadList extends StatefulWidget {
@@ -17,32 +19,128 @@ class ThreadList extends StatefulWidget {
 
 class ThreadListState extends State<ThreadList> {
   List<ThreadMessage> messages = [];
+  final _textEditingController = TextEditingController();
+  int _maxLines;
   final int id;
+  final int userId = 1;
+  final _formKey = GlobalKey<FormState>();
   ThreadListState({@required this.id});
 
   @override
   void initState() {
     _getThreadMessage();
+    _textEditingController.addListener(_textEditListener);
+  }
+
+  @override
+  void dispose() {
+    _textEditingController.removeListener(_textEditListener);
+    _textEditingController.dispose();
+    super.dispose();
+  }
+
+  // TextFieldになにか変更があったら呼ばれる
+  void _textEditListener() {
+    setState(() {
+      // TextFieldに改行が2つ以上入っていたら、3行以上になるので、3行までに止める。
+      _maxLines =
+          '\n'.allMatches(_textEditingController.text).length >= 2 ? 3 : null;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-        itemBuilder: (BuildContext context, int index) {
-          return Container(
-              decoration: BoxDecoration(
-                border: Border(
-                  bottom: BorderSide(color: Colors.black38),
-                ),
-              ),
-              child: ListTile(
-                leading: const Icon(Icons.account_circle),
-                title: Text('user: ${messages[index].userID}'),
-                subtitle: Text(messages[index].message),
-                onTap: () {/* react to the tile being tapped */},
-              ));
-        },
+    var listviewItemBuilder = (BuildContext context, int index) {
+      return Container(
+          decoration: BoxDecoration(
+            border: Border(
+              bottom: BorderSide(color: Colors.black38),
+            ),
+          ),
+          child: ListTile(
+            leading: const Icon(Icons.account_circle),
+            title: Text('user: ${messages[index].userID}'),
+            subtitle: Text(messages[index].message),
+            onTap: () {/* react to the tile being tapped */},
+          ));
+    };
+
+    var listview = ListView.builder(
+        scrollDirection: Axis.vertical,
+        shrinkWrap: true,
+        padding: EdgeInsets.only(bottom: 80.0),
+        itemBuilder: listviewItemBuilder,
         itemCount: messages.length);
+
+    var field = Row(children: <Widget>[
+      Flexible(
+          child: TextFormField(
+        controller: _textEditingController,
+        decoration: const InputDecoration(
+          hintText: 'Enter a message',
+        ),
+        validator: (value) {
+          if (value.isEmpty) {
+            return 'Enter a message';
+          }
+          return null;
+        },
+        maxLines: _maxLines,
+        keyboardType: TextInputType.multiline,
+        textInputAction: TextInputAction.newline,
+      )),
+      Container(
+          margin: const EdgeInsets.symmetric(horizontal: 4.0),
+          child: new IconButton(
+            icon: new Icon(Icons.send),
+            onPressed: () {
+              // Validate returns true if the form is valid, otherwise false.
+              if (_formKey.currentState.validate()) {
+                _handleSubmit(_textEditingController.text);
+                _textEditingController
+                  ..clearComposing()
+                  ..clear();
+              }
+            },
+          ))
+    ]);
+
+    var form = Form(
+            key: _formKey,
+            child: Container(
+              color: Colors.grey[100],
+              child: field,
+            ));
+
+    return Stack(children: <Widget>[
+      listview,
+      new Divider(
+        height: 1.0,
+      ),
+      Positioned(
+        height: 80.0,
+        left: 0.0,
+        right: 0.0,
+        bottom: .0,
+        child: form,
+      )
+    ]);
+  }
+
+  void _handleSubmit(String message) async {
+      var client = new BookClient();
+      MessageToAdd newMessageToAdd = new MessageToAdd(
+        userId: userId,
+        message: message,
+      );
+
+      try {
+        var result = await client.postMessage(id, newMessageToAdd: newMessageToAdd);
+        _getThreadMessage();
+      } on MessagePostException catch (e) {
+        print(e.errorMessage());
+        // ここでdialogとか表示したい
+      }
   }
 
   void _getThreadMessage() async {

@@ -68,7 +68,6 @@ class BookListScreenState extends State<BookListScreen> {
                       builder: (context) => BookAddScreen(),
                     ))
                         .then((String value) {
-                      print(value);
                       if (value == 'magic') {
                         setState(() {
                           initState();

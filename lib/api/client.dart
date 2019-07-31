@@ -1,9 +1,12 @@
 import 'package:http/http.dart' as http;
 import 'dart:io';
-import 'package:bookbasket/book_list_screen.dart';
-import 'package:bookbasket/book_detail.dart';
-import 'package:bookbasket/forum/thread_message.dart';
+import 'dart:convert';
 import 'package:bookbasket/book_add.dart';
+import 'package:bookbasket/book_detail.dart';
+import 'package:bookbasket/book_list_screen.dart';
+import 'package:bookbasket/forum/message_to_add.dart';
+import 'package:bookbasket/forum/thread_message.dart';
+import 'package:bookbasket/forum/message_post_exception.dart';
 import 'package:bookbasket/thread_add.dart';
 import 'dart:convert';
 
@@ -50,7 +53,6 @@ class BookClient {
       return BookDetailToAdd.fromJson(json.decode(response.body));
     }
 
-    print(response.body);
     throw new BookAddException();
   }
 
@@ -99,5 +101,15 @@ class BookClient {
     } else {
       throw Exception('Failed to load thread messages');
     }
+  }
+
+  Future<MessageToAdd> postMessage(int threadId, {MessageToAdd newMessageToAdd}) async {
+      var body = newMessageToAdd.toMap();
+      final response = await _client.post(rootURL + THREADS + '/' + threadId.toString(), body: body);
+      if(response.statusCode == 200) {
+          return MessageToAdd.fromJson(json.decode(response.body));
+      } else {
+          throw new MessagePostException();
+      }
   }
 }
