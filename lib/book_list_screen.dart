@@ -8,19 +8,16 @@ import 'package:bookbasket/book_detail_screen.dart';
 import 'package:bookbasket/book_add_screen.dart';
 
 class Book {
-  final int id;
   final String title;
   final int ISBN;
 
   Book({
-    this.id,
     this.title,
     this.ISBN,
   });
 
   factory Book.fromJson(Map<String, dynamic> json) {
     return new Book(
-      id: json['id'],
       title: json['title'],
       ISBN: json['ISBN'],
     );
