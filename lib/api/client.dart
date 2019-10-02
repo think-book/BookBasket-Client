@@ -1,6 +1,5 @@
 import 'package:http/http.dart' as http;
-import 'dart:io';
-import 'dart:convert';
+
 import 'package:bookbasket/book_add.dart';
 import 'package:bookbasket/book_detail.dart';
 import 'package:bookbasket/book_list_screen.dart';
@@ -24,11 +23,7 @@ class BookClient {
 
   BookClient() {
     // Androidかそれ以外かでurlを変える
-    if (Platform.isAndroid) {
-      rootURL = 'http://10.0.2.2:8080';
-    } else {
       rootURL = 'http://localhost:8080';
-    }
     _client = http.Client();
   }
 
@@ -52,7 +47,6 @@ class BookClient {
     if (response.statusCode == 200) {
       return BookDetailToAdd.fromJson(json.decode(response.body));
     }
-
     throw new BookAddException();
   }
 
