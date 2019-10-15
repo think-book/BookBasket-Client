@@ -38,45 +38,64 @@ class BookListScreenState extends State<BookListScreen> {
   @override
   void initState() {
     makeGetRequest();
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.all(22.0),
-          child: new GridView.count(
-            crossAxisCount: 2,
-            children: List.generate(serverResponse.length, (index) {
-              return StructuredGridCell(context, serverResponse[index].title,
-                  serverResponse[index].ISBN);
-            }),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('あなたの本棚'),
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.centerLeft,
+              end: Alignment.centerRight,
+              colors: <Color>[
+                Color(0xffd399c1),
+                Color(0xff9b5acf),
+                Color(0xff611cdf),
+              ],
+            ),
           ),
         ),
-        Align(
-          alignment: my_bottomRight,
-          child: new FloatingActionButton(
-              child: new Icon(Icons.add_box),
-              backgroundColor: Color(0xff9b5acf),
-              onPressed: () => {
-                    Navigator.of(context)
-                        .push(new MaterialPageRoute<String>(
-                      builder: (context) => BookAddScreen(),
-                    ))
-                        .then((String value) {
-                      if (value == 'magic') {
-                        setState(() {
-                          initState();
-                        });
-                      }
-                    }),
-                  }),
+      ),
+      body: Column (
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.all(22.0),
+              child: new GridView.count(
+                shrinkWrap: true,
+                crossAxisCount: 2,
+                children: List.generate(serverResponse.length, (index) {
+                  return StructuredGridCell(context, serverResponse[index].title,
+                      serverResponse[index].ISBN);
+                }),
+              ),
+            ),
+          ],
         ),
-      ],
+      backgroundColor: Colors.white,
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => {
+          Navigator.of(context)
+              .push(new MaterialPageRoute<String>(
+            builder: (context) => BookAddScreen(),
+          ))
+              .then((String value) {
+            if (value == 'magic') {
+              setState(() {
+                initState();
+              });
+            }
+          }),
+        },
+        tooltip: 'Add a new book',
+        backgroundColor: Color(0xff9b5acf),
+        child: const Icon(Icons.add_box),
+      ),
     );
   }
-
   makeGetRequest() async {
     var client = new BookClient();
     List<Book> response = await client.getBooks();
