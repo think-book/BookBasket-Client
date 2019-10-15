@@ -45,4 +45,3 @@ flutter:
   uses-material-design: true
   assets:
     - res/img/book.png
-    - res/img/logo.png

@@ -1,5 +1,7 @@
 import 'package:bookbasket/user_create_screen.dart';
 import 'package:flutter/material.dart';
+// import 'package:bookbasket/book_list_screen.dart';
+import 'package:bookbasket/user_create_screen.dart';
 
 void main() => runApp(MyApp());
 
@@ -9,9 +11,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'ThinkBookClientApp',
       debugShowCheckedModeBanner: false,
-      home: Stack(
-        children: <Widget>[
-          new Container(
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text('あなたの本棚'),
+          flexibleSpace: Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.centerLeft,
@@ -24,16 +27,10 @@ class MyApp extends StatelessWidget {
               ),
             ),
           ),
-          Scaffold(
-            backgroundColor: Colors.transparent,
-            body: new Container(
-              color: Colors.transparent,
-              padding: const EdgeInsets.fromLTRB(30.0,60.0,30.0,30.0),
-              child: UserCreateScreen(),
-            ),
-          )
-        ]
-      )
+        ),
+        // body: BookListScreen(),
+        body: UserCreateScreen(),
+      ),
     );
   }
 }
