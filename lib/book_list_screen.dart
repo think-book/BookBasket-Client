@@ -60,21 +60,23 @@ class BookListScreenState extends State<BookListScreen> {
           ),
         ),
       ),
-      body: Column (
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.all(22.0),
-              child: new GridView.count(
-                shrinkWrap: true,
-                crossAxisCount: 2,
-                children: List.generate(serverResponse.length, (index) {
-                  return StructuredGridCell(context, serverResponse[index].title,
-                      serverResponse[index].ISBN);
-                }),
-              ),
+
+      body: Stack (
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.all(22.0),
+            child: new GridView.count(
+              shrinkWrap: true,
+              crossAxisCount: 2,
+              children: List.generate(serverResponse.length, (index) {
+                return StructuredGridCell(context, serverResponse[index].title,
+                    serverResponse[index].ISBN);
+              }),
             ),
-          ],
-        ),
+          ),
+        ],
+      ),
+        
       backgroundColor: Colors.white,
       floatingActionButton: FloatingActionButton(
         onPressed: () => {
