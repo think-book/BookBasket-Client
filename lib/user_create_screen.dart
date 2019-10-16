@@ -111,14 +111,7 @@ class UserCreateScreenState extends State<UserCreateScreen>{
             Navigator.of(context)
                   .push(new MaterialPageRoute<String>(
                 builder: (context) => BookListScreen(),
-              ))
-                  .then((String value) {
-                if (value == 'magic') {
-                  setState(() {
-                    initState();
-                  });
-                }
-              });
+              ));
           }
         },
       ),
