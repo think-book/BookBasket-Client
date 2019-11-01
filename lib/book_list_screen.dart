@@ -66,7 +66,7 @@ class BookListScreenState extends State<BookListScreen> {
                     ))
                         .then((String value) {
                       if (value == 'magic') {
-                        setState(() {
+                        setState(() {     // reload booklist
                           initState();
                         });
                       }
