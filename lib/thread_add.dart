@@ -1,6 +1,4 @@
-import 'package:http/http.dart' as http;
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:bookbasket/api/client.dart';
 
