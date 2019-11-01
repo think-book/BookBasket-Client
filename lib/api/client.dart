@@ -100,6 +100,7 @@ class BookClient {
   Future<MessageToAdd> postMessage(int threadId, {MessageToAdd newMessageToAdd}) async {
       var body = newMessageToAdd.toMap();
       final response = await _client.post(rootURL + THREADS + '/' + threadId.toString(), body: body);
+      print(response.body);
       if(response.statusCode == 200) {
           return MessageToAdd.fromJson(json.decode(response.body));
       } else {

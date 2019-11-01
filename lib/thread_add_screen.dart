@@ -130,7 +130,7 @@ class ThreadAddScreenState extends State<ThreadAddScreen> {
                   _formKey.currentState.save();
 
                   // userID が実装されたら二番目の引数をuserIDに変える
-                  addThread(bookISBN, 1, this.threadTitle, this.message);
+                  await addThread(bookISBN, 1, this.threadTitle, this.message);
                 }
 
                 Navigator.of(context).pop('addedthread!');
