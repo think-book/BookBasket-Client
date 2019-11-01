@@ -1,9 +1,4 @@
-import 'dart:async';
-import 'dart:convert';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:bookbasket/api/client.dart';
 
 // あとで使う予定
 //import 'package:bookbasket/forum/thread_info.dart';

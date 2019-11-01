@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'dart:async';
-import 'dart:convert';
-import 'package:http/http.dart' as http;
 import 'package:bookbasket/forum/thread_message.dart';
 import 'package:bookbasket/api/client.dart';
 import 'package:bookbasket/forum/message_to_add.dart';
