@@ -1,14 +1,14 @@
-class UserDetailToAdd {
+class UserDetailToRegister {
   final String username;
   final String password;
 
-  UserDetailToAdd({
+  UserDetailToRegister({
     this.username,
     this.password,
   });
 
-  factory UserDetailToAdd.fromJson(Map<String, dynamic> json) {
-    return new UserDetailToAdd(
+  factory UserDetailToRegister.fromJson(Map<String, dynamic> json) {
+    return new UserDetailToRegister(
       username: json['username'],
       password: json['password'],
     );
@@ -23,8 +23,8 @@ class UserDetailToAdd {
   }
 }
 
-class UserAddException implements Exception {
+class UserRegistrationException implements Exception {
   String errorMessage() {
-    return 'Failed to add user.';
+    return 'Failed to register user.';
   }
 }

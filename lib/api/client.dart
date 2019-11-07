@@ -7,6 +7,7 @@ import 'package:bookbasket/forum/message_to_add.dart';
 import 'package:bookbasket/forum/thread_message.dart';
 import 'package:bookbasket/forum/message_post_exception.dart';
 import 'package:bookbasket/thread_add.dart';
+import 'package:bookbasket/user_create.dart';
 import 'dart:convert';
 
 class ThreadAddException implements Exception {
@@ -20,6 +21,7 @@ class BookClient {
   String rootURL;
   final String BOOKS = '/books';
   final String THREADS = '/threads';
+  final String USER_REGISTRATION = '/users/register';
 
   BookClient() {
     // Androidかそれ以外かでurlを変える
@@ -105,5 +107,16 @@ class BookClient {
       } else {
           throw new MessagePostException();
       }
+  }
+
+  Future<UserDetailToRegister> registerUser(UserDetailToRegister userDetailToRegister) async {
+    var body = userDetailToRegister.toMap();
+    final response = await _client.post(rootURL + USER_REGISTRATION, body: body);
+    if (response.statusCode == 200) {
+      return UserDetailToRegister.fromJson(json.decode(response.body));
+    } else {
+        throw new UserRegistrationException();
+    }
+
   }
 }

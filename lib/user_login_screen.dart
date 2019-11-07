@@ -1,33 +1,23 @@
+import 'package:bookbasket/user_create_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:bookbasket/api/client.dart';
 import 'package:bookbasket/book_list_screen.dart';
-import 'package:bookbasket/user_create.dart';
 
-class UserCreateScreen extends StatefulWidget{
+class UserLoginScreen extends StatefulWidget{
 
   @override
-  UserCreateScreenState createState() => new UserCreateScreenState();
+  UserLoginScreenState createState() => new UserLoginScreenState();
 }
 
-class UserCreateScreenState extends State<UserCreateScreen>{
+class UserLoginScreenState extends State<UserLoginScreen>{
   String userName;
   String password;
 
   final _formKey = GlobalKey<FormState>();
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   final style = TextStyle(color: Colors.white);
-  final snackBar = SnackBar(
-            content: Text('Registration failed! :('),
-            action: SnackBarAction(
-              label: 'Okay',
-              onPressed: () {
-                // Some code 
-              },
-            ),
-          );
   
   Widget build(BuildContext context){
-    final foreground = Material(
+    return Material(
       color: Colors.transparent,
       child: Column(
         children: <Widget>[
@@ -41,32 +31,6 @@ class UserCreateScreenState extends State<UserCreateScreen>{
           ],
         ),
     );
-
-    return Stack(
-      children: <Widget>[
-        new Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.centerLeft,
-              end: Alignment.centerRight,
-              colors: <Color>[
-                Color(0xffd399c1),
-                Color(0xff9b5acf),
-                Color(0xff611cdf),
-              ],
-            ),
-          ),
-        ),
-        Scaffold(
-          backgroundColor: Colors.transparent,
-          body: new Container(
-            color: Colors.transparent,
-            padding: const EdgeInsets.fromLTRB(60.0,60.0,60.0,30.0),
-            child: foreground,
-          ),
-        )
-      ]
-    );
   }
           
   Form formBuilder() {
@@ -77,7 +41,7 @@ class UserCreateScreenState extends State<UserCreateScreen>{
       style: style,
       decoration: const InputDecoration(
         // icon: Icon(Icons.person_add),
-        hintText: 'Enter a username.',
+        hintText: 'Enter your username.',
         hintStyle: TextStyle(color: Colors.white),
         labelText: 'Username',
         labelStyle: TextStyle(color: Colors.white),
@@ -99,7 +63,7 @@ class UserCreateScreenState extends State<UserCreateScreen>{
       style: style,
       decoration: const InputDecoration(
         // icon: Icon(Icons.security),
-        hintText: 'Enter a password.',
+        hintText: 'Enter the password.',
         hintStyle: TextStyle(color: Colors.white),
         labelText: 'Password',
         labelStyle: TextStyle(color: Colors.white),
@@ -123,28 +87,27 @@ class UserCreateScreenState extends State<UserCreateScreen>{
         minWidth: MediaQuery.of(context).size.width/3,
         color: Colors.white ,
         textColor: Color(0xff9b5acf),
-        child: const Text('Sign up'),
+        child: const Text('Log in'),
         onPressed: () async {
           // Validate returns true if the form is valid, or false otherwise.
           if (_formKey.currentState.validate()) {
             _formKey.currentState.save();
 
             // あとで使うために
-            UserDetailToRegister userDetailToRegister = new UserDetailToRegister(
-              username: userName,
+            /*
+            UserDetailToAdd userDetailToAdd = new UserDetailToAdd(
+              name: username,
               password: password,
             );
 
             try{
-              var result = await client.registerUser(userDetailToRegister);
+              var result = await client.createUser(userDetailToAdd);
             }
-            on UserRegistrationException catch(e){
+            on UserAddException catch(e){
               print(e.errorMessage());
               // ここでerror dialogとか表示したい
-              _scaffoldKey.currentState.showSnackBar(snackBar);
-              return;
             }
-
+            */
             Navigator.of(context)
                   .push(new MaterialPageRoute<String>(
                 builder: (context) => BookListScreen(),
@@ -154,6 +117,16 @@ class UserCreateScreenState extends State<UserCreateScreen>{
       ),
     );
     
+    final linkToSignUpPage = FlatButton(
+      child: Text("Don't have an account? Sign up here.", style: style,),
+      onPressed: () async{
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => UserCreateScreen()),
+        );
+      },
+    );
+
     return Form(
       key: _formKey,
       child: Column(
@@ -168,6 +141,7 @@ class UserCreateScreenState extends State<UserCreateScreen>{
           passwordField,
           //登録ボタン
           signupButton,
+          linkToSignUpPage,
       ],),
     );
   }
