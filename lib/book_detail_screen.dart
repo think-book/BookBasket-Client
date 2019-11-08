@@ -77,9 +77,7 @@ class DetailScreenState extends State<DetailScreen> {
                             .then((String value) {
                           print(value);
                           if (value == 'addedthread!') {
-                            setState(() {
-                              initState();
-                            });
+                            getThread();
                           }
                         }),
                       })),
