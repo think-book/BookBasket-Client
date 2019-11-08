@@ -2,6 +2,7 @@ import 'package:bookbasket/user_create_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:bookbasket/api/client.dart';
 import 'package:bookbasket/book_list_screen.dart';
+import 'package:bookbasket/user_login.dart';
 
 class UserLoginScreen extends StatefulWidget{
 
@@ -41,15 +42,15 @@ class UserLoginScreenState extends State<UserLoginScreen>{
       style: style,
       decoration: const InputDecoration(
         // icon: Icon(Icons.person_add),
-        hintText: 'Enter your username.',
+        hintText: 'ユーザー名',
         hintStyle: TextStyle(color: Colors.white),
-        labelText: 'Username',
-        labelStyle: TextStyle(color: Colors.white),
+        // labelText: 'Username',
+        // labelStyle: TextStyle(color: Colors.white),
       ),
       autovalidate: false,
       validator: (value) {
         if (value.isEmpty) {
-          return 'Required field.';
+          return '入力してください。';
         }
         return null;
       },
@@ -63,16 +64,16 @@ class UserLoginScreenState extends State<UserLoginScreen>{
       style: style,
       decoration: const InputDecoration(
         // icon: Icon(Icons.security),
-        hintText: 'Enter the password.',
+        hintText: 'パスワード',
         hintStyle: TextStyle(color: Colors.white),
-        labelText: 'Password',
-        labelStyle: TextStyle(color: Colors.white),
+        // labelText: 'パスワード',
+        // labelStyle: TextStyle(color: Colors.white),
       ),
       obscureText: true,
       autovalidate: false,
       validator: (value) {
         if (value.isEmpty) {
-          return 'Required field.';
+          return '入力してください。';
         }
         return null;
       },
@@ -81,33 +82,33 @@ class UserLoginScreenState extends State<UserLoginScreen>{
       },
     );
 
-    final signupButton = Padding(
+    final loginButton = Padding(
       padding: const EdgeInsets.symmetric(vertical: 16.0),
       child: MaterialButton(
         minWidth: MediaQuery.of(context).size.width/3,
         color: Colors.white ,
         textColor: Color(0xff9b5acf),
-        child: const Text('Log in'),
+        child: const Text('ログイン'),
         onPressed: () async {
           // Validate returns true if the form is valid, or false otherwise.
           if (_formKey.currentState.validate()) {
             _formKey.currentState.save();
 
             // あとで使うために
-            /*
-            UserDetailToAdd userDetailToAdd = new UserDetailToAdd(
-              name: username,
+            UserDetailToLogin userDetailToLogin = new UserDetailToLogin(
+              username: userName,
               password: password,
             );
 
             try{
-              var result = await client.createUser(userDetailToAdd);
+              var result = await client.loginUser(userDetailToLogin);
             }
-            on UserAddException catch(e){
+            on UserLoginException catch(e){
               print(e.errorMessage());
               // ここでerror dialogとか表示したい
+              return;
             }
-            */
+
             Navigator.of(context)
                   .push(new MaterialPageRoute<String>(
                 builder: (context) => BookListScreen(),
@@ -118,7 +119,7 @@ class UserLoginScreenState extends State<UserLoginScreen>{
     );
     
     final linkToSignUpPage = FlatButton(
-      child: Text("Don't have an account? Sign up here.", style: style,),
+      child: Text("アカウントの作成はこちらへ", style: style,),
       onPressed: () async{
         Navigator.push(
           context,
@@ -140,7 +141,7 @@ class UserLoginScreenState extends State<UserLoginScreen>{
           //パスワード記入欄
           passwordField,
           //登録ボタン
-          signupButton,
+          loginButton,
           linkToSignUpPage,
       ],),
     );

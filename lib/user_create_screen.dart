@@ -77,15 +77,15 @@ class UserCreateScreenState extends State<UserCreateScreen>{
       style: style,
       decoration: const InputDecoration(
         // icon: Icon(Icons.person_add),
-        hintText: 'Enter a username.',
+        hintText: 'ユーザー名',
         hintStyle: TextStyle(color: Colors.white),
-        labelText: 'Username',
-        labelStyle: TextStyle(color: Colors.white),
+        // labelText: 'Username',
+        // labelStyle: TextStyle(color: Colors.white),
       ),
       autovalidate: false,
       validator: (value) {
         if (value.isEmpty) {
-          return 'Required field.';
+          return '入力してください。';
         }
         return null;
       },
@@ -99,16 +99,16 @@ class UserCreateScreenState extends State<UserCreateScreen>{
       style: style,
       decoration: const InputDecoration(
         // icon: Icon(Icons.security),
-        hintText: 'Enter a password.',
+        hintText: 'パスワード',
         hintStyle: TextStyle(color: Colors.white),
-        labelText: 'Password',
-        labelStyle: TextStyle(color: Colors.white),
+        // labelText: 'Password',
+        // labelStyle: TextStyle(color: Colors.white),
       ),
       obscureText: true,
       autovalidate: false,
       validator: (value) {
         if (value.isEmpty) {
-          return 'Required field.';
+          return '入力してください。';
         }
         return null;
       },
@@ -123,7 +123,7 @@ class UserCreateScreenState extends State<UserCreateScreen>{
         minWidth: MediaQuery.of(context).size.width/3,
         color: Colors.white ,
         textColor: Color(0xff9b5acf),
-        child: const Text('Sign up'),
+        child: const Text('登録する'),
         onPressed: () async {
           // Validate returns true if the form is valid, or false otherwise.
           if (_formKey.currentState.validate()) {

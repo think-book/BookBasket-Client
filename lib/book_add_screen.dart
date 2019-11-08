@@ -3,9 +3,6 @@ import 'package:bookbasket/api/client.dart';
 import 'package:bookbasket/book_add.dart';
 
 class BookAddScreen extends StatefulWidget {
-  String bookTitle;
-  int bookISBN;
-
   @override
   BookAddScreenState createState() => new BookAddScreenState();
 }
