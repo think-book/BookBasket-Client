@@ -43,13 +43,13 @@ class ThreadList {
 
 class Thread {
   final int id;
-  final int userID;
+  final String userName;
   final String title;
   final int ISBN;
 
   Thread({
     this.id,
-    this.userID,
+    this.userName,
     this.title,
     this.ISBN,
   });
@@ -57,7 +57,7 @@ class Thread {
   factory Thread.fromJson(Map<String, dynamic> json) {
     return new Thread(
       id: json['id'],
-      userID: json['userID'],
+      userName: json['userName'],
       title: json['title'],
       ISBN: json['ISBN'],
     );
@@ -115,7 +115,7 @@ buildContainerMiddle(BuildContext context, List<Thread> forums, int index) {
       ),
       child: ListTile(
         leading: const Icon(Icons.account_circle),
-        title: Text('user: ${forums[index].userID}'),
+        title: Text('user: ${forums[index].userName}'),
         subtitle: Text(forums[index].title),
         onTap: () {
           Navigator.push(
