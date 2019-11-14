@@ -22,6 +22,17 @@ class Book {
   }
 }
 
+class Choice {
+  const Choice({ this.title, this.icon });
+  final String title;
+  final IconData icon;
+}
+
+const List<Choice> choices = <Choice>[
+  Choice(title: 'Logout', icon: Icons.exit_to_app),
+  Choice(title: 'About Us', icon: Icons.people),
+];
+
 class BookListScreen extends StatefulWidget {
   @override
   BookListScreenState createState() {
@@ -44,6 +55,21 @@ class BookListScreenState extends State<BookListScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('あなたの本棚'),
+        actions: <Widget>[
+          // overflow menu
+          PopupMenuButton<Choice>(
+            // onSelected: _select,
+            itemBuilder: (BuildContext context) {
+              return choices.map((Choice choice) {
+                return PopupMenuItem<Choice>(
+                  value: choice,
+                  child: Text(choice.title),
+                );
+              }).toList();
+            },
+          ),
+        ],
+
         flexibleSpace: Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
