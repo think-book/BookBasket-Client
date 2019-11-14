@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:bookbasket/book_add.dart';
 import 'package:bookbasket/book_detail.dart';
 import 'package:bookbasket/book_list_screen.dart';
+import 'package:bookbasket/public_booklist_screen.dart';
 import 'package:bookbasket/forum/message_to_add.dart';
 import 'package:bookbasket/forum/thread_message.dart';
 import 'package:bookbasket/forum/message_post_exception.dart';
@@ -24,6 +25,7 @@ class BookClient {
   final String THREADS = '/threads';
   final String USER_REGISTRATION = '/users/registration';
   final String USER_LOGIN = '/users/login';
+  final String PUBLIC_BOOKLIST = '/books/all';
 
   BookClient() {
     // Androidかそれ以外かでurlを変える
@@ -38,6 +40,17 @@ class BookClient {
     if (response.statusCode == 200) {
       Iterable l = jsonDecode(response.body);
       List<Book> books = l.map((model) => Book.fromJson(model)).toList();
+      return books;
+    }
+  }
+
+  // public本のリスト取得
+  Future<List<PublicBook>> getPublicBookList() async {
+    final response = await _client.get(rootURL + PUBLIC_BOOKLIST);
+
+    if (response.statusCode == 200) {
+      Iterable l = jsonDecode(response.body);
+      List<PublicBook> books = l.map((model) => PublicBook.fromJson(model)).toList();
       return books;
     }
   }
