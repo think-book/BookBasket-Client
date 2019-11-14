@@ -4,6 +4,7 @@ import 'package:bookbasket/api/client.dart';
 //　次のページ
 import 'package:bookbasket/book_detail_screen.dart';
 import 'package:bookbasket/book_add_screen.dart';
+import 'package:bookbasket/public_booklist_screen.dart';
 
 class Book {
   final String title;
@@ -21,6 +22,17 @@ class Book {
     );
   }
 }
+
+class Choice {
+  const Choice({ this.title, this.icon });
+  final String title;
+  final IconData icon;
+}
+
+const List<Choice> choices = <Choice>[
+  Choice(title: 'ログアウト', icon: Icons.exit_to_app),
+  Choice(title: 'About Us', icon: Icons.people),
+];
 
 class BookListScreen extends StatefulWidget {
   @override
@@ -44,6 +56,29 @@ class BookListScreenState extends State<BookListScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('あなたの本棚'),
+        actions: <Widget>[
+          new IconButton(icon: new Icon(Icons.public),
+              onPressed: (){
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => PublicBookListScreen()),
+                );
+              },
+          ),
+          // overflow menu
+          PopupMenuButton<Choice>(
+            // onSelected: _select,
+            itemBuilder: (BuildContext context) {
+              return choices.map((Choice choice) {
+                return PopupMenuItem<Choice>(
+                  value: choice,
+                  child: Text(choice.title),
+                );
+              }).toList();
+            },
+          ),
+        ],
+
         flexibleSpace: Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
