@@ -1,15 +1,15 @@
 import 'package:http/http.dart' as http;
 
-import 'package:bookbasket/book_add.dart';
-import 'package:bookbasket/book_detail.dart';
-import 'package:bookbasket/book_list_screen.dart';
-import 'package:bookbasket/public_booklist_screen.dart';
+import 'package:bookbasket/book/book_add.dart';
+import 'package:bookbasket/book/book_detail.dart';
+import 'package:bookbasket/book/book_list_screen.dart';
+import 'package:bookbasket/book/public_booklist_screen.dart';
 import 'package:bookbasket/forum/message_to_add.dart';
 import 'package:bookbasket/forum/thread_message.dart';
 import 'package:bookbasket/forum/message_post_exception.dart';
-import 'package:bookbasket/thread_add.dart';
-import 'package:bookbasket/user_create.dart';
-import 'package:bookbasket/user_login.dart';
+import 'package:bookbasket/book/thread_add.dart';
+import 'package:bookbasket/user_create/user_create.dart';
+import 'package:bookbasket/user_create/user_login.dart';
 import 'dart:convert';
 
 class ThreadAddException implements Exception {

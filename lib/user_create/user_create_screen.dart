@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:bookbasket/api/client.dart';
-import 'package:bookbasket/book_list_screen.dart';
-import 'package:bookbasket/user_create.dart';
+import 'package:bookbasket/book/book_list_screen.dart';
+import 'package:bookbasket/user_create/user_create.dart';
 
 class UserCreateScreen extends StatefulWidget{
 

@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import 'package:bookbasket/thread_add.dart';
+import 'package:bookbasket/book/thread_add.dart';
 
 class ThreadAddScreen extends StatefulWidget {
   int bookISBN;

@@ -1,8 +1,8 @@
-import 'package:bookbasket/user_create_screen.dart';
+import 'package:bookbasket/user_create/user_create_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:bookbasket/api/client.dart';
-import 'package:bookbasket/book_list_screen.dart';
-import 'package:bookbasket/user_login.dart';
+import 'package:bookbasket/book/book_list_screen.dart';
+import 'package:bookbasket/user_create/user_login.dart';
 
 class UserLoginScreen extends StatefulWidget{
 
