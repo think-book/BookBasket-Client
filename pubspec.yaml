@@ -5,6 +5,7 @@ version: 1.0.0
 dependencies:
   flutter_web: any
   shelf_static: ^0.2.8
+  barcode_scan: ^1.0.0
 
   flutter:
     sdk: flutter
@@ -14,8 +15,8 @@ dependencies:
 
 dev_dependencies:
   flutter_web_test: any
-  build_runner: ^1.2.2
-  build_web_compilers: ^1.1.0
+  build_runner: ^1.7.2
+  build_web_compilers: ^2.7.1
 
   flutter_test:
     sdk: flutter
