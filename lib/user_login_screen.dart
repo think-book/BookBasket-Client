@@ -1,33 +1,24 @@
+import 'package:bookbasket/user_create_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:bookbasket/api/client.dart';
 import 'package:bookbasket/book_list_screen.dart';
-import 'package:bookbasket/user_create.dart';
+import 'package:bookbasket/user_login.dart';
 
-class UserCreateScreen extends StatefulWidget{
+class UserLoginScreen extends StatefulWidget{
 
   @override
-  UserCreateScreenState createState() => new UserCreateScreenState();
+  UserLoginScreenState createState() => new UserLoginScreenState();
 }
 
-class UserCreateScreenState extends State<UserCreateScreen>{
+class UserLoginScreenState extends State<UserLoginScreen>{
   String userName;
   String password;
 
   final _formKey = GlobalKey<FormState>();
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   final style = TextStyle(color: Colors.white);
-  final snackBar = SnackBar(
-            content: Text('Registration failed! :('),
-            action: SnackBarAction(
-              label: 'Okay',
-              onPressed: () {
-                // Some code 
-              },
-            ),
-          );
   
   Widget build(BuildContext context){
-    final foreground = Material(
+    return Material(
       color: Colors.transparent,
       child: Column(
         children: <Widget>[
@@ -40,32 +31,6 @@ class UserCreateScreenState extends State<UserCreateScreen>{
           formBuilder(),
           ],
         ),
-    );
-
-    return Stack(
-      children: <Widget>[
-        new Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.centerLeft,
-              end: Alignment.centerRight,
-              colors: <Color>[
-                Color(0xffd399c1),
-                Color(0xff9b5acf),
-                Color(0xff611cdf),
-              ],
-            ),
-          ),
-        ),
-        Scaffold(
-          backgroundColor: Colors.transparent,
-          body: new Container(
-            color: Colors.transparent,
-            padding: const EdgeInsets.fromLTRB(60.0,60.0,60.0,30.0),
-            child: foreground,
-          ),
-        )
-      ]
     );
   }
           
@@ -101,7 +66,7 @@ class UserCreateScreenState extends State<UserCreateScreen>{
         // icon: Icon(Icons.security),
         hintText: 'パスワード',
         hintStyle: TextStyle(color: Colors.white),
-        // labelText: 'Password',
+        // labelText: 'パスワード',
         // labelStyle: TextStyle(color: Colors.white),
       ),
       obscureText: true,
@@ -117,31 +82,30 @@ class UserCreateScreenState extends State<UserCreateScreen>{
       },
     );
 
-    final signupButton = Padding(
+    final loginButton = Padding(
       padding: const EdgeInsets.symmetric(vertical: 16.0),
       child: MaterialButton(
         minWidth: MediaQuery.of(context).size.width/3,
         color: Colors.white ,
         textColor: Color(0xff9b5acf),
-        child: const Text('登録する'),
+        child: const Text('ログイン'),
         onPressed: () async {
           // Validate returns true if the form is valid, or false otherwise.
           if (_formKey.currentState.validate()) {
             _formKey.currentState.save();
 
             // あとで使うために
-            UserDetailToRegister userDetailToRegister = new UserDetailToRegister(
+            UserDetailToLogin userDetailToLogin = new UserDetailToLogin(
               username: userName,
               password: password,
             );
 
             try{
-              var result = await client.registerUser(userDetailToRegister);
+              var result = await client.loginUser(userDetailToLogin);
             }
-            on UserRegistrationException catch(e){
+            on UserLoginException catch(e){
               print(e.errorMessage());
               // ここでerror dialogとか表示したい
-              _scaffoldKey.currentState.showSnackBar(snackBar);
               return;
             }
 
@@ -154,6 +118,16 @@ class UserCreateScreenState extends State<UserCreateScreen>{
       ),
     );
     
+    final linkToSignUpPage = FlatButton(
+      child: Text("アカウントの作成はこちらへ", style: style,),
+      onPressed: () async{
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => UserCreateScreen()),
+        );
+      },
+    );
+
     return Form(
       key: _formKey,
       child: Column(
@@ -167,7 +141,8 @@ class UserCreateScreenState extends State<UserCreateScreen>{
           //パスワード記入欄
           passwordField,
           //登録ボタン
-          signupButton,
+          loginButton,
+          linkToSignUpPage,
       ],),
     );
   }

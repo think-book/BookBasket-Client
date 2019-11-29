@@ -10,11 +10,11 @@ void main(){
   group('thread test', (){
     test('thread message from json', (){
       int id = 0;
-      int userID = 1;
+      String userName = "hello";
       String message = '0123456789';
-      var tm = ThreadMessage.fromJson({'id': id, 'userID': userID, 'message': message});
+      var tm = ThreadMessage.fromJson({'id': id, 'userName': userName, 'message': message});
       expect(tm.id, id);
-      expect(tm.userID, userID);
+      expect(tm.userName, userName);
       expect(tm.message, message);
     });
   });

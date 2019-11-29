@@ -19,7 +19,7 @@ class ThreadListState extends State<ThreadList> {
   final _textEditingController = TextEditingController();
   int _maxLines;
   final int id;
-  final int userId = 1;
+  // final int userId = 1;
   final _formKey = GlobalKey<FormState>();
   ThreadListState({@required this.id});
 
@@ -56,7 +56,7 @@ class ThreadListState extends State<ThreadList> {
           ),
           child: ListTile(
             leading: const Icon(Icons.account_circle),
-            title: Text('user: ${messages[index].userID}'),
+            title: Text('user: ${messages[index].userName}'),
             subtitle: Text(messages[index].message),
             onTap: () {/* react to the tile being tapped */},
           ));
@@ -127,7 +127,6 @@ class ThreadListState extends State<ThreadList> {
   void _handleSubmit(String message) async {
       var client = new BookClient();
       MessageToAdd newMessageToAdd = new MessageToAdd(
-        userId: userId,
         message: message,
       );
 
