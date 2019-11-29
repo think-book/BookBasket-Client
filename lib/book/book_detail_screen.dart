@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:bookbasket/api/client.dart';
 
 // 使っている関数、クラスなど
-import 'package:bookbasket/book_detail.dart';
-import 'package:bookbasket/thread_add_screen.dart';
+import 'package:bookbasket/book/book_detail.dart';
+import 'package:bookbasket/book/thread_add_screen.dart';
 
 class DetailScreen extends StatefulWidget {
   final String bookTitle;

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:bookbasket/api/client.dart';
-import 'package:bookbasket/book_add.dart';
+import 'package:bookbasket/book/book_add.dart';
 
 class BookAddScreen extends StatefulWidget {
   @override

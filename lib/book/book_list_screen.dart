@@ -2,20 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:bookbasket/api/client.dart';
 
 //　次のページ
-import 'package:bookbasket/book_detail_screen.dart';
-import 'package:bookbasket/book_list_screen.dart';
+import 'package:bookbasket/book/book_detail_screen.dart';
+import 'package:bookbasket/book/book_add_screen.dart';
+import 'package:bookbasket/book/public_booklist_screen.dart';
 
-class PublicBook {
+class Book {
   final String title;
   final int ISBN;
 
-  PublicBook({
+  Book({
     this.title,
     this.ISBN,
   });
 
-  factory PublicBook.fromJson(Map<String, dynamic> json) {
-    return new PublicBook(
+  factory Book.fromJson(Map<String, dynamic> json) {
+    return new Book(
       title: json['title'],
       ISBN: json['ISBN'],
     );
@@ -33,15 +34,15 @@ const List<Choice> choices = <Choice>[
   Choice(title: 'About Us', icon: Icons.people),
 ];
 
-class PublicBookListScreen extends StatefulWidget {
+class BookListScreen extends StatefulWidget {
   @override
-  PublicBookListScreenState createState() {
-    return new PublicBookListScreenState();
+  BookListScreenState createState() {
+    return new BookListScreenState();
   }
 }
 
-class PublicBookListScreenState extends State<BookListScreen> {
-  List<PublicBook> serverResponse = [];
+class BookListScreenState extends State<BookListScreen> {
+  List<Book> serverResponse = [];
   static const Alignment my_bottomRight = Alignment(0.9, 0.9);
 
   @override
@@ -54,13 +55,13 @@ class PublicBookListScreenState extends State<BookListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('みんなの本棚'),
+        title: const Text('あなたの本棚'),
         actions: <Widget>[
-          new IconButton(icon: new Icon(Icons.account_box),
+          new IconButton(icon: new Icon(Icons.public),
               onPressed: (){
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => BookListScreen()),
+                  MaterialPageRoute(builder: (context) => PublicBookListScreen()),
                 );
               },
           ),
@@ -77,6 +78,7 @@ class PublicBookListScreenState extends State<BookListScreen> {
             },
           ),
         ],
+
         flexibleSpace: Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
@@ -109,12 +111,29 @@ class PublicBookListScreenState extends State<BookListScreen> {
       ),
         
       backgroundColor: Colors.white,
-
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => {
+          Navigator.of(context)
+              .push(new MaterialPageRoute<String>(
+            builder: (context) => BookAddScreen(),
+          ))
+              .then((String value) {
+            if (value == 'magic') {
+              setState(() {
+                initState();
+              });
+            }
+          }),
+        },
+        tooltip: 'Add a new book',
+        backgroundColor: Color(0xff9b5acf),
+        child: const Icon(Icons.add_box),
+      ),
     );
   }
   makeGetRequest() async {
     var client = new BookClient();
-    List<PublicBook> response = await client.getPublicBookList();
+    List<Book> response = await client.getBooks();
     setState(() {
       serverResponse = response;
     });
