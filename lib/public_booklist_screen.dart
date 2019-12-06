@@ -1,3 +1,4 @@
+import 'package:bookbasket/book_add.dart';
 import 'package:flutter/material.dart';
 import 'package:bookbasket/api/client.dart';
 
@@ -43,6 +44,8 @@ class PublicBookListScreen extends StatefulWidget {
 class PublicBookListScreenState extends State<BookListScreen> {
   List<PublicBook> serverResponse = [];
   static const Alignment my_bottomRight = Alignment(0.9, 0.9);
+  // Icon _icon = Icon(Icons.library_add);
+  // var client = new BookClient();
 
   @override
   void initState() {
@@ -55,13 +58,11 @@ class PublicBookListScreenState extends State<BookListScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('みんなの本棚'),
+        automaticallyImplyLeading: false, // appBarのback buttonを隠す
         actions: <Widget>[
           new IconButton(icon: new Icon(Icons.account_box),
               onPressed: (){
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => BookListScreen()),
-                );
+                Navigator.of(context).pop('1234');
               },
           ),
           // overflow menu
@@ -98,10 +99,9 @@ class PublicBookListScreenState extends State<BookListScreen> {
             padding: const EdgeInsets.all(22.0),
             child: new GridView.count(
               shrinkWrap: true,
-              crossAxisCount: 2,
+              crossAxisCount: 2,  //absoluteではなくてrelativeにしたい
               children: List.generate(serverResponse.length, (index) {
-                return StructuredGridCell(context, serverResponse[index].title,
-                    serverResponse[index].ISBN);
+                return StructuredGridCell(context, serverResponse[index].title,serverResponse[index].ISBN);
               }),
             ),
           ),
@@ -122,37 +122,63 @@ class PublicBookListScreenState extends State<BookListScreen> {
 }
 
 Card StructuredGridCell(BuildContext context, String bookTitle, int bookISBN) {
+
+  Icon _icon = Icon(Icons.library_add);
+  var client = new BookClient();
+
   return new Card(
-      elevation: 1.5,
-      child: new Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        mainAxisSize: MainAxisSize.min,
-        verticalDirection: VerticalDirection.down,
-        children: <Widget>[
-          new Padding(
-            padding: EdgeInsets.only(left: 20.0, right: 20.0, top: 20),
-            child: new Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                FlatButton(
-                  child: (Image.asset('res/img/book.png')),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          //builder: (context) => ThreadList(),
-                          builder: (context) => DetailScreen(
-                              bookTitle: bookTitle, bookISBN: bookISBN)),
-                    );
-                  },
-                ),
-                new Text(
-                  bookTitle,
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
-          )
-        ],
-      ));
+    elevation: 1.5,
+    child: new Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      mainAxisSize: MainAxisSize.min,
+      verticalDirection: VerticalDirection.down,
+      children: <Widget>[
+        new Padding(
+          padding: EdgeInsets.only(left: 20.0, right: 20.0, top: 20),
+          child: new Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              FlatButton(
+                child: (Image.asset('res/img/book.png')),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        //builder: (context) => ThreadList(),
+                        builder: (context) => DetailScreen(
+                            bookTitle: bookTitle, bookISBN: bookISBN)),
+                  );
+                },
+              ),
+              new Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children:[
+                  new Text(
+                    bookTitle,
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  new IconButton(
+                    icon: _icon,
+                    onPressed: () async {
+                      if (_icon == Icon(Icons.done)){
+                        return;
+                      }
+                      var bookDetailToAdd = new BookDetailToAdd(title: bookTitle, ISBN: bookISBN.toString(), description: "a");
+                      try{
+                        var result = await client.postBook(bookDetailToAdd);
+                      }
+                      on BookAddException catch(e){
+                        print(e.errorMessage());
+                        // ここでdialogとか表示したい
+                      }
+                    },
+                  ),
+                ] 
+              ),
+            ],
+          ),
+        )
+      ],
+    )
+  );
 }
