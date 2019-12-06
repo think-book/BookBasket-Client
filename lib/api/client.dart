@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:bookbasket/book_add.dart';
 import 'package:bookbasket/book_detail.dart';
 import 'package:bookbasket/book_list_screen.dart';
+import 'package:bookbasket/user_list_screen.dart';
 import 'package:bookbasket/public_booklist_screen.dart';
 import 'package:bookbasket/forum/message_to_add.dart';
 import 'package:bookbasket/forum/thread_message.dart';
@@ -22,6 +23,7 @@ class BookClient {
   http.Client _client;
   String rootURL;
   final String BOOKS = '/books';
+  final String USERS = '/users';
   final String THREADS = '/threads';
   final String USER_REGISTRATION = '/users/registration';
   final String USER_LOGIN = '/users/login';
@@ -29,7 +31,7 @@ class BookClient {
 
   BookClient() {
     // Androidかそれ以外かでurlを変える
-      // rootURL = 'https://thinkbook.itsp.club';
+//       rootURL = 'https://thinkbook.itsp.club';
       rootURL = 'http://localhost';
     _client = http.Client();
   }
@@ -38,6 +40,27 @@ class BookClient {
   Future<List<Book>> getBooks() async {
     final response = await _client.get(rootURL + BOOKS);
 
+    if (response.statusCode == 200) {
+      Iterable l = jsonDecode(response.body);
+      List<Book> books = l.map((model) => Book.fromJson(model)).toList();
+      return books;
+    }
+  }
+
+  // ユーザーのリスト取得
+  Future<List<User>> getUsers() async {
+    final response = await _client.get(rootURL + USERS+ '/lists');
+
+    if (response.statusCode == 200) {
+      Iterable l = jsonDecode(response.body);
+      List<User> users= l.map((model) => User.fromJson(model)).toList();
+      return users;
+    }
+  }
+
+  // 他人の本棚を取得
+  Future<List<Book>> getUserBooks(int id) async {
+    final response = await _client.get(rootURL + USERS + '/' + id.toString() + '/books');
     if (response.statusCode == 200) {
       Iterable l = jsonDecode(response.body);
       List<Book> books = l.map((model) => Book.fromJson(model)).toList();
@@ -125,22 +148,22 @@ class BookClient {
       }
   }
 
-  Future<UserDetailToRegister> registerUser(UserDetailToRegister userDetailToRegister) async {
+  Future<User> registerUser(UserDetailToRegister userDetailToRegister) async {
     var body = userDetailToRegister.toMap();
     final response = await _client.post(rootURL + USER_REGISTRATION, body: body);
     if (response.statusCode == 200) {
-      return UserDetailToRegister.fromJson(json.decode(response.body));
+      return User.fromJson(json.decode(response.body));
     } else {
         throw new UserRegistrationException();
     }
 
   }
 
-  Future<UserDetailToLogin> loginUser(UserDetailToLogin userDetailToLogin) async {
+  Future<User> loginUser(UserDetailToLogin userDetailToLogin) async {
     var body = userDetailToLogin.toMap();
     final response = await _client.post(rootURL + USER_LOGIN, body: body);
     if (response.statusCode == 200) {
-      return UserDetailToLogin.fromJson(json.decode(response.body));
+      return User.fromJson(json.decode(response.body));
     } else {
         throw new UserLoginException();
     }

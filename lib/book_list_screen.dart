@@ -4,6 +4,7 @@ import 'package:bookbasket/api/client.dart';
 //　次のページ
 import 'package:bookbasket/book_detail_screen.dart';
 import 'package:bookbasket/book_add_screen.dart';
+import 'package:bookbasket/user_list_screen.dart';
 import 'package:bookbasket/public_booklist_screen.dart';
 
 class Book {
@@ -35,13 +36,19 @@ const List<Choice> choices = <Choice>[
 ];
 
 class BookListScreen extends StatefulWidget {
+  String userName;
+
+  BookListScreen({@required this.userName});
   @override
   BookListScreenState createState() {
-    return new BookListScreenState();
+    return new BookListScreenState(userName: userName);
   }
 }
 
 class BookListScreenState extends State<BookListScreen> {
+  String userName;
+  BookListScreenState({@required this.userName});
+
   List<Book> serverResponse = [];
   static const Alignment my_bottomRight = Alignment(0.9, 0.9);
 
@@ -55,24 +62,40 @@ class BookListScreenState extends State<BookListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('あなたの本棚'),
+        title: Text(userName+ 'の本棚'),
         automaticallyImplyLeading: false, // appBarのback buttonを隠す
         actions: <Widget>[
           //みんなの本棚へのボタン
-          new IconButton(icon: new Icon(Icons.public),
+          new IconButton(icon: new Icon(Icons.people),
             onPressed: (){
               Navigator.of(context).push(
                 new MaterialPageRoute<String>(
-                  builder: (context) => PublicBookListScreen(),
+                  builder: (context) => UserListScreen(),
                 )
               ).then((String value) {
-                if (value == '1234') {
+                if (value == '5678') {
                     //個人の本棚を更新する
                     initState();
                 }
               });
             },
           ),
+
+          new IconButton(icon: new Icon(Icons.public),
+            onPressed: (){
+              Navigator.of(context).push(
+                  new MaterialPageRoute<String>(
+                    builder: (context) => PublicBookListScreen(),
+                  )
+              ).then((String value) {
+                if (value == '1234') {
+                  //個人の本棚を更新する
+                  initState();
+                }
+              });
+            },
+          ),
+
           // overflow menu
           PopupMenuButton<Choice>(
             // onSelected: _select,
