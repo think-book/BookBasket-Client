@@ -57,14 +57,22 @@ class BookListScreenState extends State<BookListScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('あなたの本棚'),
+        automaticallyImplyLeading: false, // appBarのback buttonを隠す
         actions: <Widget>[
+          //みんなの本棚へのボタン
           new IconButton(icon: new Icon(Icons.public),
-              onPressed: (){
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => PublicBookListScreen()),
-                );
-              },
+            onPressed: (){
+              Navigator.of(context).push(
+                new MaterialPageRoute<String>(
+                  builder: (context) => PublicBookListScreen(),
+                )
+              ).then((String value) {
+                if (value == '1234') {
+                    //個人の本棚を更新する
+                    initState();
+                }
+              });
+            },
           ),
           // overflow menu
           PopupMenuButton<Choice>(
@@ -163,7 +171,6 @@ Card StructuredGridCell(BuildContext context, String bookTitle, int bookISBN) {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          //builder: (context) => ThreadList(),
                           builder: (context) => DetailScreen(
                               bookTitle: bookTitle, bookISBN: bookISBN)),
                     );
