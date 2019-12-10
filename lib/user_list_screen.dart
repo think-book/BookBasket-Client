@@ -63,7 +63,7 @@ class UserListScreenState extends State<UserListScreen> {
                 Navigator.of(context).pop('5678');
               },
           ),
-          // overflow menux
+          // overflow menu
           PopupMenuButton<Choice>(
             // onSelected: _select,
             itemBuilder: (BuildContext context) {
@@ -109,24 +109,6 @@ class UserListScreenState extends State<UserListScreen> {
       ),
 
       backgroundColor: Colors.white,
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => {
-          Navigator.of(context)
-              .push(new MaterialPageRoute<String>(
-            builder: (context) => BookAddScreen(),
-          ))
-              .then((String value) {
-            if (value == 'magic') {
-              setState(() {
-                initState();
-              });
-            }
-          }),
-        },
-        tooltip: 'Add a neww book',
-        backgroundColor: Color(0xff9b5acf),
-        child: const Icon(Icons.add_box),
-      ),
     );
   }
   makeGetRequest() async {
