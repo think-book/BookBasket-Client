@@ -11,8 +11,10 @@ class ThreadScreen extends StatelessWidget {
 
   ThreadScreen({@required this.title, @required this.id});
 
+
   @override
   Widget build(BuildContext context) {
+    final Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         title: Text(title),
@@ -30,7 +32,10 @@ class ThreadScreen extends StatelessWidget {
           ),
         ),
       ),
-      body: ThreadList(id: id),
+      body: Container(
+              margin: EdgeInsets.symmetric(horizontal: (size.width - size.height < 0) ? 0 : (size.width - size.height) / 3),
+              child: ThreadList(id: id)
+              ),
     );
   }
 }

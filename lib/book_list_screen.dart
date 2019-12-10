@@ -53,6 +53,7 @@ class BookListScreenState extends State<BookListScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         title: const Text('あなたの本棚'),
@@ -96,15 +97,18 @@ class BookListScreenState extends State<BookListScreen> {
 
       body: Stack (
         children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.all(22.0),
-            child: new GridView.count(
-              shrinkWrap: true,
-              crossAxisCount: 2,
-              children: List.generate(serverResponse.length, (index) {
-                return StructuredGridCell(context, serverResponse[index].title,
-                    serverResponse[index].ISBN);
-              }),
+          Container(
+            margin: EdgeInsets.symmetric(horizontal: (size.width - size.height < 0) ? 0 : (size.width - size.height) / 3),
+            child: Padding(
+              padding: const EdgeInsets.all(22.0),
+              child: new GridView.count(
+                shrinkWrap: true,
+                crossAxisCount: 2,
+                children: List.generate(serverResponse.length, (index) {
+                  return StructuredGridCell(context, serverResponse[index].title,
+                      serverResponse[index].ISBN);
+                }),
+              ),
             ),
           ),
         ],

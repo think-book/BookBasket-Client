@@ -39,9 +39,9 @@ class ThreadListState extends State<ThreadList> {
   // TextFieldになにか変更があったら呼ばれる
   void _textEditListener() {
     setState(() {
-      // TextFieldに改行が2つ以上入っていたら、3行以上になるので、3行までに止める。
+      // TextFieldに改行が2つ以上入っていたら、16行以上になるので、16行までに止める。
       _maxLines =
-          '\n'.allMatches(_textEditingController.text).length >= 2 ? 3 : null;
+          '\n'.allMatches(_textEditingController.text).length >= 15 ? 16 : null;
     });
   }
 
@@ -110,15 +110,15 @@ class ThreadListState extends State<ThreadList> {
             ));
 
     return Stack(children: <Widget>[
-      listview,
+      Align(
+        alignment: Alignment.bottomCenter,
+        child: listview,
+      ),
       new Divider(
         height: 1.0,
       ),
-      Positioned(
-        height: 80.0,
-        left: 0.0,
-        right: 0.0,
-        bottom: .0,
+      Align(
+        alignment: Alignment.bottomCenter,
         child: form,
       )
     ]);
