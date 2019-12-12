@@ -1,4 +1,5 @@
 import 'package:http/http.dart' as http;
+import 'package:flutter/material.dart';
 
 import 'package:bookbasket/book_add.dart';
 import 'package:bookbasket/book_detail.dart';
@@ -145,5 +146,15 @@ class BookClient {
         throw new UserLoginException();
     }
 
+  }
+
+  Future<Image> getPicture(String ISBN) async {
+      final response = await _client.get("https://www.googleapis.com/books/v1/volumes?q=" + ISBN);
+      if (response.statusCode == 200) {
+          var res = json.decode(response.body);
+          return Image.network(res['items'][0]['volumeInfo']['imageLinks']['thumbnail']);
+      } else {
+          return Image.asset('res/img/book.png');
+      }
   }
 }

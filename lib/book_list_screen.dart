@@ -43,6 +43,7 @@ class BookListScreen extends StatefulWidget {
 
 class BookListScreenState extends State<BookListScreen> {
   List<Book> serverResponse = [];
+  List<Image> googleImages = [];
   static const Alignment my_bottomRight = Alignment(0.9, 0.9);
 
   @override
@@ -114,7 +115,8 @@ class BookListScreenState extends State<BookListScreen> {
                 crossAxisCount: 2,
                 children: List.generate(serverResponse.length, (index) {
                   return StructuredGridCell(context, serverResponse[index].title,
-                      serverResponse[index].ISBN);
+                      serverResponse[index].ISBN,
+                      googleImages[index]);
                 }),
               ),
             ),
@@ -146,13 +148,25 @@ class BookListScreenState extends State<BookListScreen> {
   makeGetRequest() async {
     var client = new BookClient();
     List<Book> response = await client.getBooks();
+    List<Image> images = [];
+    for(int index = 0; index < response.length; index++)
+    {
+      var ISBN = response[index].ISBN.toString();
+      while(ISBN.length < 13)
+      {
+          ISBN = "0" + ISBN;
+      }
+      var picture = await client.getPicture(ISBN);
+      images.add(picture);
+    }
     setState(() {
       serverResponse = response;
+      googleImages = images;
     });
   }
 }
 
-Card StructuredGridCell(BuildContext context, String bookTitle, int bookISBN) {
+Card StructuredGridCell(BuildContext context, String bookTitle, int bookISBN, Image image) {
   return new Card(
       elevation: 1.5,
       child: new Column(
@@ -166,7 +180,7 @@ Card StructuredGridCell(BuildContext context, String bookTitle, int bookISBN) {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 FlatButton(
-                  child: (Image.asset('res/img/book.png')),
+                  child: (image),
                   onPressed: () {
                     Navigator.push(
                       context,
