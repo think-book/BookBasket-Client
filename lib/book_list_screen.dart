@@ -107,12 +107,13 @@ class BookListScreenState extends State<BookListScreen> {
       body: Stack (
         children: <Widget>[
           Container(
-            margin: EdgeInsets.symmetric(horizontal: (size.width - size.height < 0) ? 0 : (size.width - size.height) / 3),
+//            margin: EdgeInsets.symmetric(horizontal: (size.width - size.height < 0) ? 0 : (size.width - size.height) / 3),
+            margin: EdgeInsets.symmetric(horizontal: (size.width % 280) / 3),
             child: Padding(
               padding: const EdgeInsets.all(22.0),
               child: new GridView.count(
                 shrinkWrap: true,
-                crossAxisCount: 2,
+                crossAxisCount: (size.width~/280), // size of thumbnail is 128x189
                 children: List.generate(serverResponse.length, (index) {
                   return StructuredGridCell(context, serverResponse[index].title,
                       serverResponse[index].ISBN,
@@ -170,25 +171,28 @@ Card StructuredGridCell(BuildContext context, String bookTitle, int bookISBN, Im
   return new Card(
       elevation: 1.5,
       child: new Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
         mainAxisSize: MainAxisSize.min,
-        verticalDirection: VerticalDirection.down,
+//        verticalDirection: VerticalDirection.down,
         children: <Widget>[
           new Padding(
-            padding: EdgeInsets.only(left: 20.0, right: 20.0, top: 20),
+            padding: EdgeInsets.only(left: 20.0, right: 20.0, top: 20, bottom: 20),
             child: new Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                FlatButton(
-                  child: (image),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => DetailScreen(
-                              bookTitle: bookTitle, bookISBN: bookISBN)),
-                    );
-                  },
+                Center(
+                  child: FlatButton(
+                    child: (image),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => DetailScreen(
+                                bookTitle: bookTitle, bookISBN: bookISBN)),
+                      );
+                    },
+                  ),
                 ),
                 new Text(
                   bookTitle,
