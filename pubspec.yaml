@@ -5,6 +5,7 @@ version: 1.0.0
 dependencies:
   flutter_web: any
   shelf_static: ^0.2.8
+  flushbar: ^1.9.1
 
   flutter:
     sdk: flutter
