@@ -3,8 +3,6 @@ import 'package:bookbasket/api/client.dart';
 
 //　次のページ
 import 'package:bookbasket/otheruser_booklist_screen.dart';
-import 'package:bookbasket/book_add_screen.dart';
-import 'package:bookbasket/public_booklist_screen.dart';
 
 class User {
   final int id;
@@ -30,7 +28,7 @@ class Choice {
 }
 
 const List<Choice> choices = <Choice>[
-  Choice(title: 'ログアウト', icon: Icons.exit_to_app),
+//  Choice(title: 'ログアウト', icon: Icons.exit_to_app),
   Choice(title: 'About Us', icon: Icons.people),
 ];
 
@@ -53,6 +51,7 @@ class UserListScreenState extends State<UserListScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         title: const Text('ユーザ一覧'),    //userNameを入れたい
@@ -94,17 +93,30 @@ class UserListScreenState extends State<UserListScreen> {
 
       body: Stack (
         children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.all(22.0),
-            child: new GridView.count(
-              shrinkWrap: true,
-              crossAxisCount: 2,
-              children: List.generate(serverResponse.length, (index) {
-                return StructuredGridCell(context, serverResponse[index].id,
-                    serverResponse[index].userName);
-              }),
+          Container(
+//            margin: EdgeInsets.symmetric(horizontal: (size.width ) / 10),
+            alignment: Alignment.topCenter,
+            child: Padding(
+              padding: const EdgeInsets.all(22.0),
+//              child: new ListView.builder(
+//                  itemCount: serverResponse.length,
+//                  itemBuilder: (context,index){
+//                    return StructuredListCell(context, serverResponse[index].id, serverResponse[index].userName);
+//                  }
+//              ),
+              child: new GridView.count(
+                shrinkWrap: true,
+                childAspectRatio: 4,
+                mainAxisSpacing: 0,
+//                crossAxisSpacing: 10,
+                crossAxisCount: (size.width * 1.3  < size.height ) ? 1 : size.width~/350,
+                children: List.generate(serverResponse.length, (index) {
+                  return StructuredListCell(context, serverResponse[index].id,
+                      serverResponse[index].userName);
+                }),
+              ),
             ),
-          ),
+          )
         ],
       ),
 
@@ -120,38 +132,32 @@ class UserListScreenState extends State<UserListScreen> {
   }
 }
 
-Card StructuredGridCell(BuildContext context, int id, String userName) {
-  return new Card(
+Container StructuredListCell(BuildContext context, int id, String userName){
+  return Container(
+    alignment: Alignment.centerLeft,
+    child: Card(
       elevation: 1.5,
-      child: new Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+      child: Column(
         mainAxisSize: MainAxisSize.min,
-        verticalDirection: VerticalDirection.down,
         children: <Widget>[
-          new Padding(
-            padding: EdgeInsets.only(left: 20.0, right: 20.0, top: 20),
-            child: new Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                FlatButton(
-                  child: (new Icon(Icons.person)),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          //builder: (context) => ThreadList(),
-                          builder: (context) => OtheruserBooklistScreen(
-                              id: id, userName: userName)),
-                    );
-                  },
-                ),
-                new Text(
-                  userName,
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-              ],
+          FlatButton(
+            child: ListTile(
+              leading: Icon(Icons.account_circle, size: 40,),
+              title: Text(userName),
+              subtitle: Text('User'),
             ),
-          )
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  //builder: (context) => ThreadList(),
+                    builder: (context) => OtheruserBooklistScreen(
+                        id: id, userName: userName)),
+              );
+            },
+          ),
         ],
-      ));
+      )
+    ) ,
+  );
 }

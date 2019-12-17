@@ -57,14 +57,19 @@ class BookClient {
 
   // ユーザーのリスト取得
   Future<List<User>> getUsers() async {
-    final response = await _client.get(rootURL + USERS+ '/lists');
+//    final response = await _client.get(rootURL + USERS+ '/lists');
+//
+//    if (response.statusCode == 200) {
+//      Iterable l = jsonDecode(response.body);
+//      List<User> users= l.map((model) => User.fromJson(model)).toList();
+//      return users;
+//    }
 
-    if (response.statusCode == 200) {
-      Iterable l = jsonDecode(response.body);
-      List<User> users= l.map((model) => User.fromJson(model)).toList();
-      return users;
-    }
-
+    // 以下はclient単体で flutter runするときにコメントを外す。その際、上のserverへのrequestをコメントアウトする。
+    String json = "[{\"id\":1,\"userName\":\"Alice\"},{\"id\":2,\"userName\":\"Bob\"},{\"id\":3,\"userName\":\"Carol\"},{\"id\":4,\"userName\":\"Charlie\"},{\"id\":5,\"userName\":\"hello\"},{\"id\":6,\"userName\":\"zfhr\"},{\"id\":7,\"userName\":\"nagashima\"},{\"id\":8,\"userName\":\"12345678\"}]";
+    Iterable l = jsonDecode(json);
+    List<User> users = l.map((model) => User.fromJson(model)).toList();
+    return users;
   }
 
   // 他人の本棚を取得
