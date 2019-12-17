@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:bookbasket/api/client.dart';
 
 //　次のページ
-import 'package:bookbasket/user_list_screen.dart';
 import 'package:bookbasket/book_detail_screen.dart';
 import 'package:bookbasket/book_list_screen.dart';
 import 'package:bookbasket/book_add.dart';
+import 'dart:math';
+
 
 class Choice {
   const Choice({ this.title, this.icon });
@@ -14,7 +15,7 @@ class Choice {
 }
 
 const List<Choice> choices = <Choice>[
-  Choice(title: 'ログアウト', icon: Icons.exit_to_app),
+//  Choice(title: 'ログアウト', icon: Icons.exit_to_app),
   Choice(title: 'About Us', icon: Icons.people),
 ];
 
@@ -34,6 +35,7 @@ class OtheruserBooklistScreenState extends State<OtheruserBooklistScreen> {
   final int id;
   final String userName;
 
+  List<Image> googleImages = [];
   List<Book> serverResponse = [];
   static const Alignment my_bottomRight = Alignment(0.9, 0.9);
 
@@ -47,6 +49,7 @@ class OtheruserBooklistScreenState extends State<OtheruserBooklistScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         title:  Text( userName + "の本棚"),    //userNameを入れたい
@@ -87,52 +90,53 @@ class OtheruserBooklistScreenState extends State<OtheruserBooklistScreen> {
 
       body: Stack (
         children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.all(22.0),
-            child: new GridView.count(
-              shrinkWrap: true,
-              crossAxisCount: 2,
-              children: List.generate(serverResponse.length, (index) {
-                return StructuredGridCell(context, serverResponse[index].title,
-                    serverResponse[index].ISBN);
-              }),
+          Container(
+//            margin: EdgeInsets.symmetric(horizontal: (size.width - size.height < 0) ? 0 : (size.width - size.height) / 3),
+//            margin: EdgeInsets.symmetric(horizontal: (size.width % 280) / 3),
+            alignment: Alignment.topCenter,
+            child: Padding(
+              padding: const EdgeInsets.all(22.0),
+              child: new GridView.count(
+                shrinkWrap: true,
+                crossAxisCount: (size.width * 1.5 < size.height ) ? (size.width~/180) : (size.width~/260),
+                children: List.generate(serverResponse.length, (index) {
+                  return StructuredGridCell(context, serverResponse[index].title,
+                      serverResponse[index].ISBN,
+                      googleImages[index]);
+                }),
+              ),
             ),
           ),
         ],
       ),
 
       backgroundColor: Colors.white,
-//      floatingActionButton: FloatingActionButton(
-//        onPressed: () => {
-//        Navigator.of(context)
-//            .push(new MaterialPageRoute<String>(
-//          builder: (context) => BookAddScreen(),
-//        ))
-//            .then((String value) {
-//          if (value == 'magic') {
-//            setState(() {
-//              initState();
-//            });
-//          }
-//        }),
-//        },
-//        tooltip: 'Add a neww book',
-//        backgroundColor: Color(0xff9b5acf),
-//        child: const Icon(Icons.add_box),
-//      ),
     );
   }
   makeGetRequest() async {
     var client = new BookClient();
     List<Book> response = await client.getUserBooks(id);
+    List<Image> images = [];
+    for(int index = 0; index < response.length; index++)
+    {
+      var ISBN = response[index].ISBN.toString();
+      while(ISBN.length < 13)
+      {
+        ISBN = "0" + ISBN;
+      }
+      var picture = await client.getPicture(ISBN);
+      images.add(picture);
+    }
     setState(() {
       serverResponse = response;
+      googleImages = images;
     });
   }
 }
 
-Card StructuredGridCell(BuildContext context, String title, int ISBN) {
+Card StructuredGridCell(BuildContext context, String title, int ISBN, Image image) {
   Icon _icon = Icon(Icons.library_add);
+  final Size size = MediaQuery.of(context).size;
   var client = new BookClient();
 
   return new Card(
@@ -143,46 +147,49 @@ Card StructuredGridCell(BuildContext context, String title, int ISBN) {
         verticalDirection: VerticalDirection.down,
         children: <Widget>[
           new Padding(
-            padding: EdgeInsets.only(left: 20.0, right: 20.0, top: 20),
+            padding: EdgeInsets.only(left: 20.0, right: 20.0, bottom: 20),
             child: new Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                FlatButton(
-                  child: (Image.asset('res/img/book.png')),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          //builder: (context) => ThreadList(),
-                          builder: (context) => DetailScreen(
-                              bookTitle: title, bookISBN: ISBN)),
-                    );
-                  },
+                Align(
+                  alignment: Alignment.centerRight,
+                  child:  IconButton(
+                    icon: _icon,
+                    iconSize: 20,
+                    onPressed: () async {
+                      var bookDetailToAdd = new BookDetailToAdd(title: title, ISBN: ISBN.toString(), description: "a");
+                      try{
+                        var result = await client.postBook(bookDetailToAdd);
+                      }
+                      on BookAddException catch(e){
+                        print(e.errorMessage());
+                        // ここでdialogとか表示したい
+                      }
+                    },
+                  ),
                 ),
-                new Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children:[
-                      new Text(
-                        title,
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      new IconButton(
-                        icon: _icon,
-                        onPressed: () async {
-                          if (_icon == Icon(Icons.done)){
-                            return;
-                          }
-                          var bookDetailToAdd = new BookDetailToAdd(title: title, ISBN: ISBN.toString(), description: "a");
-                          try{
-                            var result = await client.postBook(bookDetailToAdd);
-                          }
-                          on BookAddException catch(e){
-                            print(e.errorMessage());
-                            // ここでdialogとか表示したい
-                          }
-                        },
-                      ),
-                    ]
+                Center(
+                  child: FlatButton(
+                    child: Image(
+                      image: image.image,
+                      width: min(size.width*0.15, 120 ) ,
+                      //                    height: ((size.width * 1.5  < size.height ) ? size.height * 0.10 : image.height),
+                      fit: BoxFit.scaleDown,
+                    ),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          //builder: (context) => ThreadList(),
+                            builder: (context) => DetailScreen(
+                                bookTitle: title, bookISBN: ISBN)),
+                      );
+                    },
+                  ),
+                ),
+                new Text(
+                  title,
+                  style: TextStyle(fontWeight: FontWeight.normal, fontSize: size.height * 0.017),
                 ),
               ],
             ),

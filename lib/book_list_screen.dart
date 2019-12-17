@@ -33,7 +33,7 @@ class Choice {
 }
 
 const List<Choice> choices = <Choice>[
-  Choice(title: 'ログアウト', icon: Icons.exit_to_app),
+//  Choice(title: 'ログアウト', icon: Icons.exit_to_app),
   Choice(title: 'About Us', icon: Icons.people),
 ];
 
