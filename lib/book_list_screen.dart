@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:bookbasket/api/client.dart';
 
@@ -131,12 +133,13 @@ class BookListScreenState extends State<BookListScreen> {
         children: <Widget>[
           Container(
 //            margin: EdgeInsets.symmetric(horizontal: (size.width - size.height < 0) ? 0 : (size.width - size.height) / 3),
-            margin: EdgeInsets.symmetric(horizontal: (size.width % 280) / 3),
+//            margin: EdgeInsets.symmetric(horizontal: (size.width % 280) / 3),
+            alignment: Alignment.topCenter,
             child: Padding(
               padding: const EdgeInsets.all(22.0),
               child: new GridView.count(
                 shrinkWrap: true,
-                crossAxisCount: (size.width~/280), // size of thumbnail is 128x189
+                crossAxisCount: (size.width * 1.5 < size.height ) ? (size.width~/180) : (size.width~/260),
                 children: List.generate(serverResponse.length, (index) {
                   return StructuredGridCell(context, serverResponse[index].title,
                       serverResponse[index].ISBN,
@@ -191,6 +194,7 @@ class BookListScreenState extends State<BookListScreen> {
 }
 
 Card StructuredGridCell(BuildContext context, String bookTitle, int bookISBN, Image image) {
+  final Size size = MediaQuery.of(context).size;
   return new Card(
       elevation: 1.5,
       child: new Column(
@@ -206,7 +210,12 @@ Card StructuredGridCell(BuildContext context, String bookTitle, int bookISBN, Im
               children: <Widget>[
                 Center(
                   child: FlatButton(
-                    child: (image),
+                    child: Image(
+                      image: image.image,
+                      width: min(size.width*0.15, 120 ) ,
+        //                    height: ((size.width * 1.5  < size.height ) ? size.height * 0.10 : image.height),
+                      fit: BoxFit.scaleDown,
+                    ),
                     onPressed: () {
                       Navigator.push(
                         context,
@@ -219,7 +228,7 @@ Card StructuredGridCell(BuildContext context, String bookTitle, int bookISBN, Im
                 ),
                 new Text(
                   bookTitle,
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                  style: TextStyle(fontWeight: FontWeight.normal, fontSize: size.height * 0.017),
                 ),
               ],
             ),

@@ -35,8 +35,8 @@ class MyApp extends StatelessWidget {
 //              child: UserLoginScreen(),
 //            ),
 //          )
-//          BookListScreen(),
-          PublicBookListScreen(),
+          BookListScreen(userName: "hellboy",),
+//          PublicBookListScreen(),
         ]
       )
     );

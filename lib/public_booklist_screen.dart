@@ -163,27 +163,27 @@ Card StructuredGridCell(BuildContext context, String bookTitle, int bookISBN, Im
 //      verticalDirection: VerticalDirection.down,
       children: <Widget>[
         new Padding(
-          padding: EdgeInsets.only(left: 20.0, right: 20.0, bottom: 20, top: 20),
+          padding: EdgeInsets.only(left: 20.0, right: 20.0, bottom: 20),
           child: new Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-//              Align(
-//                alignment: Alignment.center,
-//                child: IconButton(
-//                  icon: _icon,
-//                  iconSize: 20,
-//                  onPressed: () async {
-//                    var bookDetailToAdd = new BookDetailToAdd(title: bookTitle, ISBN: bookISBN.toString(), description: "a");
-//                    try{
-//                      var result = await client.postBook(bookDetailToAdd);
-//                    }
-//                    on BookAddException catch(e){
-//                      print(e.errorMessage());
-//                      // ここでdialogとか表示したい
-//                    }
-//                  },
-//                ),
-//              ),
+              Align(
+                alignment: Alignment.centerRight,
+                child:  IconButton(
+                  icon: _icon,
+                  iconSize: 20,
+                  onPressed: () async {
+                    var bookDetailToAdd = new BookDetailToAdd(title: bookTitle, ISBN: bookISBN.toString(), description: "a");
+                    try{
+                      var result = await client.postBook(bookDetailToAdd);
+                    }
+                    on BookAddException catch(e){
+                      print(e.errorMessage());
+                      // ここでdialogとか表示したい
+                    }
+                  },
+                ),
+              ),
               Center(
                 child: FlatButton(
                   child: Image(
