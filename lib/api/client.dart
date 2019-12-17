@@ -32,8 +32,8 @@ class BookClient {
 
   BookClient() {
     // Androidかそれ以外かでurlを変える
-//       rootURL = 'https://thinkbook.itsp.club';
-      rootURL = 'http://localhost';
+   rootURL = 'https://thinkbook.itsp.club';
+//      rootURL = 'http://localhost';
     _client = http.Client();
   }
 
@@ -57,52 +57,52 @@ class BookClient {
 
   // ユーザーのリスト取得
   Future<List<User>> getUsers() async {
-//    final response = await _client.get(rootURL + USERS+ '/lists');
-//
-//    if (response.statusCode == 200) {
-//      Iterable l = jsonDecode(response.body);
-//      List<User> users= l.map((model) => User.fromJson(model)).toList();
-//      return users;
-//    }
+    final response = await _client.get(rootURL + USERS+ '/lists');
+
+    if (response.statusCode == 200) {
+      Iterable l = jsonDecode(response.body);
+      List<User> users= l.map((model) => User.fromJson(model)).toList();
+      return users;
+    }
 
     // 以下はclient単体で flutter runするときにコメントを外す。その際、上のserverへのrequestをコメントアウトする。
-    String json = "[{\"id\":1,\"userName\":\"Alice\"},{\"id\":2,\"userName\":\"Bob\"},{\"id\":3,\"userName\":\"Carol\"},{\"id\":4,\"userName\":\"Charlie\"},{\"id\":5,\"userName\":\"hello\"},{\"id\":6,\"userName\":\"zfhr\"},{\"id\":7,\"userName\":\"nagashima\"},{\"id\":8,\"userName\":\"12345678\"}]";
-    Iterable l = jsonDecode(json);
-    List<User> users = l.map((model) => User.fromJson(model)).toList();
-    return users;
+//    String json = "[{\"id\":1,\"userName\":\"Alice\"},{\"id\":2,\"userName\":\"Bob\"},{\"id\":3,\"userName\":\"Carol\"},{\"id\":4,\"userName\":\"Charlie\"},{\"id\":5,\"userName\":\"hello\"},{\"id\":6,\"userName\":\"zfhr\"},{\"id\":7,\"userName\":\"nagashima\"},{\"id\":8,\"userName\":\"12345678\"}]";
+//    Iterable l = jsonDecode(json);
+//    List<User> users = l.map((model) => User.fromJson(model)).toList();
+//    return users;
   }
 
   // 他人の本棚を取得
   Future<List<Book>> getUserBooks(int id) async {
-//    final response = await _client.get(rootURL + USERS + '/' + id.toString() + '/books');
-//    if (response.statusCode == 200) {
-//      Iterable l = jsonDecode(response.body);
-//      List<Book> books = l.map((model) => Book.fromJson(model)).toList();
-//      return books;
-//    }
+    final response = await _client.get(rootURL + USERS + '/' + id.toString() + '/books');
+    if (response.statusCode == 200) {
+      Iterable l = jsonDecode(response.body);
+      List<Book> books = l.map((model) => Book.fromJson(model)).toList();
+      return books;
+    }
 
     // 以下はclient単体で flutter runするときにコメントを外す。その際、上のserverへのrequestをコメントアウトする。
-    String json = "[{\"ISBN\":9784274219986,\"title\":\"機械学習入門\"},{\"ISBN\":9784774173016,\"title\":\"SQL実践入門\"},{\"ISBN\":9784798145600,\"title\":\"あたらしい人工知能の教科書\"},{\"ISBN\":9784822236861,\"title\":\"グーグルに学ぶディープラーニング\"},{\"ISBN\":9784865940404,\"title\":\"ブロックチェーン 仕組みと理論\"},{\"ISBN\":9784873117386,\"title\":\"入門 Python 3\"}]";
-    Iterable l = jsonDecode(json);
-    List<Book> books = l.map((model) => Book.fromJson(model)).toList();
-    return books;
+//    String json = "[{\"ISBN\":9784274219986,\"title\":\"機械学習入門\"},{\"ISBN\":9784774173016,\"title\":\"SQL実践入門\"},{\"ISBN\":9784798145600,\"title\":\"あたらしい人工知能の教科書\"},{\"ISBN\":9784822236861,\"title\":\"グーグルに学ぶディープラーニング\"},{\"ISBN\":9784865940404,\"title\":\"ブロックチェーン 仕組みと理論\"},{\"ISBN\":9784873117386,\"title\":\"入門 Python 3\"}]";
+//    Iterable l = jsonDecode(json);
+//    List<Book> books = l.map((model) => Book.fromJson(model)).toList();
+//    return books;
   }
 
   // public本のリスト取得
   Future<List<PublicBook>> getPublicBookList() async {
-//    final response = await _client.get(rootURL + PUBLIC_BOOKLIST);
+    final response = await _client.get(rootURL + PUBLIC_BOOKLIST);
 
-//    if (response.statusCode == 200) {
-//      Iterable l = jsonDecode(response.body);
-//      List<PublicBook> books = l.map((model) => PublicBook.fromJson(model)).toList();
-//      return books;
-//    }
+    if (response.statusCode == 200) {
+      Iterable l = jsonDecode(response.body);
+      List<PublicBook> books = l.map((model) => PublicBook.fromJson(model)).toList();
+      return books;
+    }
 
     // 以下はclient単体で flutter runするときにコメントを外す。その際、上のserverへのrequestをコメントアウトする。
-    String json = "[{\"ISBN\":9784274219986,\"title\":\"機械学習入門\"},{\"ISBN\":9784774173016,\"title\":\"SQL実践入門\"},{\"ISBN\":9784798145600,\"title\":\"あたらしい人工知能の教科書\"},{\"ISBN\":9784822236861,\"title\":\"グーグルに学ぶディープラーニング\"},{\"ISBN\":9784865940404,\"title\":\"ブロックチェーン 仕組みと理論\"},{\"ISBN\":9784873117386,\"title\":\"入門 Python 3\"}]";
-    Iterable l = jsonDecode(json);
-    List<PublicBook> books = l.map((model) => PublicBook.fromJson(model)).toList();
-    return books;
+//    String json = "[{\"ISBN\":9784274219986,\"title\":\"機械学習入門\"},{\"ISBN\":9784774173016,\"title\":\"SQL実践入門\"},{\"ISBN\":9784798145600,\"title\":\"あたらしい人工知能の教科書\"},{\"ISBN\":9784822236861,\"title\":\"グーグルに学ぶディープラーニング\"},{\"ISBN\":9784865940404,\"title\":\"ブロックチェーン 仕組みと理論\"},{\"ISBN\":9784873117386,\"title\":\"入門 Python 3\"}]";
+//    Iterable l = jsonDecode(json);
+//    List<PublicBook> books = l.map((model) => PublicBook.fromJson(model)).toList();
+//    return books;
   }
 
   // 本追加
