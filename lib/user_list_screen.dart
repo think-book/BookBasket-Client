@@ -125,7 +125,7 @@ class UserListScreenState extends State<UserListScreen> {
   }
   makeGetRequest() async {
     var client = new BookClient();
-    List<User> response = await client.getUsers();
+    List<User> response = (await client.getUsers()).cast<User>();
     setState(() {
       serverResponse = response;
     });
