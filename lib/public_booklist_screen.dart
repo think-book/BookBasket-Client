@@ -118,7 +118,7 @@ class PublicBookListScreenState extends State<BookListScreen> {
   }
   makeGetRequest() async {
     var client = new BookClient();
-    List<PublicBook> response = await client.getPublicBookList();
+    List<PublicBook> response = (await client.getPublicBookList()).cast<PublicBook>();
     setState(() {
       serverResponse = response;
     });

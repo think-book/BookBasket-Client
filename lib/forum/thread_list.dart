@@ -131,7 +131,7 @@ class ThreadListState extends State<ThreadList> {
       );
 
       try {
-        var result = await client.postMessage(id, newMessageToAdd: newMessageToAdd);
+        var result = await client.postMessage(id, newMessageToAdd);
         _getThreadMessage();
       } on MessagePostException catch (e) {
         print(e.errorMessage());

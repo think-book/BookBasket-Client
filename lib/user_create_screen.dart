@@ -155,16 +155,22 @@ class UserCreateScreenState extends State<UserCreateScreen>{
             on UserRegistrationException catch(e){
               print(e.errorMessage());
               // ここでerror dialogとか表示したい
-              Flushbar(
-                icon: Icon(Icons.error),
-                title:  "登録エラー:",
-                message:  "ユーザー名がすでに使用されています。",
-                duration:  Duration(seconds: 3),
-                backgroundColor: Colors.red,
-                boxShadows: [BoxShadow(color: Colors.red[800], offset: Offset(0.0, 2.0), blurRadius: 3.0,)],
-              ).show(context);
+              flushBar(context, "同じユーザー名ですでに登録されています。");
+//              Flushbar(
+//                icon: Icon(Icons.error),
+//                title:  "登録エラー:",
+//                message:  "ユーザー名がすでに使用されています。",
+//                duration:  Duration(seconds: 3),
+//                backgroundColor: Colors.red,
+//                boxShadows: [BoxShadow(color: Colors.red[800], offset: Offset(0.0, 2.0), blurRadius: 3.0,)],
+//              ).show(context);
               return;
 //              _scaffoldKey.currentState.showSnackBar(snackBar);
+              return;
+            }
+            on InternalServerErrorException catch(e){
+              print(e.errorMessage());
+              flushBar(context, "通信に失敗しました。");
               return;
             }
 
@@ -194,4 +200,18 @@ class UserCreateScreenState extends State<UserCreateScreen>{
       ],),
     );
   }
+}
+
+Future<Object> flushBar(BuildContext context, String message) {
+  return Flushbar(
+    icon: Icon(Icons.error),
+    title: "登録エラー:",
+    message: message,
+    duration: Duration(seconds: 3),
+    margin: EdgeInsets.all(8),
+    backgroundColor: Colors.red,
+    boxShadows: [BoxShadow(
+      color: Colors.red[800], offset: Offset(0.0, 2.0), blurRadius: 3.0,)
+    ],
+  ).show(context);
 }

@@ -148,7 +148,7 @@ class BookListScreenState extends State<BookListScreen> {
   }
   makeGetRequest() async {
     var client = new BookClient();
-    List<Book> response = await client.getBooks();
+    List<Book> response = (await client.getBooks()).cast<Book>();
     List<Image> images = [];
     for(int index = 0; index < response.length; index++)
     {

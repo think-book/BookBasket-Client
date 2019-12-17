@@ -88,8 +88,8 @@ class BookClient {
   }
 
   // スレッド追加
-  Future<ThreadToAdd> postThread(int ISBN, {ThreadToAdd newThreadToAdd}) async {
-    var body = newThreadToAdd.toMap();
+  Future<ThreadToAdd> postThread(int ISBN, String title) async {
+    var body = new ThreadToAdd(title: title).toMap();
     final response = await _client
         .post(rootURL + BOOKS + '/' + ISBN.toString() + THREADS, body: body);
     // print(response.body);
@@ -123,7 +123,7 @@ class BookClient {
     }
   }
 
-  Future<MessageToAdd> postMessage(int threadId, {MessageToAdd newMessageToAdd}) async {
+  Future<MessageToAdd> postMessage(int threadId, MessageToAdd newMessageToAdd) async {
       var body = newMessageToAdd.toMap();
       final response = await _client.post(rootURL + THREADS + '/' + threadId.toString(), body: body);
       if(response.statusCode == 200) {
@@ -138,8 +138,12 @@ class BookClient {
     final response = await _client.post(rootURL + USER_REGISTRATION, body: body);
     if (response.statusCode == 200) {
       return UserDetailToRegister.fromJson(json.decode(response.body));
-    } else {
+    }
+    else if (response.statusCode == 400) {
         throw new UserRegistrationException();
+    }
+    else {
+    throw new InternalServerErrorException();
     }
 
   }
@@ -149,8 +153,11 @@ class BookClient {
     final response = await _client.post(rootURL + USER_LOGIN, body: body);
     if (response.statusCode == 200) {
       return UserDetailToLogin.fromJson(json.decode(response.body));
-    } else {
+    } else if (response.statusCode == 400){
         throw new UserLoginException();
+    }
+    else {
+      throw new InternalServerErrorException();
     }
 
   }
@@ -163,5 +170,11 @@ class BookClient {
       } else {
           return Image.asset('res/img/book.png');
       }
+  }
+}
+
+class InternalServerErrorException implements Exception{
+  String errorMessage() {
+    return 'Internal Server Error.';
   }
 }

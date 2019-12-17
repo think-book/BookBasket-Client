@@ -116,15 +116,21 @@ class UserLoginScreenState extends State<UserLoginScreen>{
             on UserLoginException catch(e){
               print(e.errorMessage());
               // ここでerror dialogとか表示したい
-              Flushbar(
-                icon: Icon(Icons.error),
-                title:  "ログインエラー:",
-                message:  "認証に失敗しました。",
-                duration:  Duration(seconds: 3),
-                margin: EdgeInsets.all(8),
-                backgroundColor: Colors.red,
-                boxShadows: [BoxShadow(color: Colors.red[800], offset: Offset(0.0, 2.0), blurRadius: 3.0,)],
-              ).show(context);
+              flushBar(context, "ユーザー名かパスワードが間違っています");
+//              Flushbar(
+//                icon: Icon(Icons.error),
+//                title:  "ログインエラー:",
+//                message:  "認証に失敗しました。",
+//                duration:  Duration(seconds: 3),
+//                margin: EdgeInsets.all(8),
+//                backgroundColor: Colors.red,
+//                boxShadows: [BoxShadow(color: Colors.red[800], offset: Offset(0.0, 2.0), blurRadius: 3.0,)],
+//              ).show(context);
+              return;
+            }
+            on InternalServerErrorException catch(e){
+              print(e.errorMessage());
+              flushBar(context, "通信に失敗しました。");
               return;
             }
 
@@ -166,4 +172,18 @@ class UserLoginScreenState extends State<UserLoginScreen>{
       ],),
     );
   }
+}
+
+Future<Object> flushBar(BuildContext context, String message) {
+  return Flushbar(
+    icon: Icon(Icons.error),
+    title: "ログインエラー:",
+    message: message,
+    duration: Duration(seconds: 3),
+    margin: EdgeInsets.all(8),
+    backgroundColor: Colors.red,
+    boxShadows: [BoxShadow(
+      color: Colors.red[800], offset: Offset(0.0, 2.0), blurRadius: 3.0,)
+    ],
+  ).show(context);
 }
