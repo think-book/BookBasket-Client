@@ -32,8 +32,8 @@ class BookClient {
 
   BookClient() {
     // Androidかそれ以外かでurlを変える
-//   rootURL = 'https://thinkbook.itsp.club';
-   rootURL = 'http://localhost';
+   rootURL = 'https://thinkbook.itsp.club';
+//   rootURL = 'http://localhost';
     _client = http.Client();
   }
 
