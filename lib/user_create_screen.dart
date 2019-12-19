@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:bookbasket/api/client.dart';
 import 'package:bookbasket/book_list_screen.dart';
 import 'package:bookbasket/user_create.dart';
+import 'package:bookbasket/user_list_screen.dart';
 
 class UserCreateScreen extends StatefulWidget{
 
@@ -135,8 +136,9 @@ class UserCreateScreenState extends State<UserCreateScreen>{
               password: password,
             );
 
+            User result;
             try{
-              var result = await client.registerUser(userDetailToRegister);
+              result = await client.registerUser(userDetailToRegister);
             }
             on UserRegistrationException catch(e){
               print(e.errorMessage());
@@ -146,9 +148,10 @@ class UserCreateScreenState extends State<UserCreateScreen>{
             }
 
             Navigator.of(context)
-                  .push(new MaterialPageRoute<String>(
-                builder: (context) => BookListScreen(),
-              ));
+                .push(new MaterialPageRoute<String>(
+            builder: (context) => BookListScreen(userName: result.userName),
+            ));
+
           }
         },
       ),

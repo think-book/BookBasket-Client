@@ -1,6 +1,9 @@
 import 'package:bookbasket/book_list_screen.dart';
 import 'package:bookbasket/user_login_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:bookbasket/public_booklist_screen.dart';
+import 'package:bookbasket/otheruser_booklist_screen.dart';
+import 'package:bookbasket/user_list_screen.dart';
 
 void main() => runApp(MyApp());
 
@@ -34,7 +37,10 @@ class MyApp extends StatelessWidget {
               child: UserLoginScreen(),
             ),
           )
-//          BookListScreen(),
+//          BookListScreen(userName: "hellboy",),
+//          OtheruserBooklistScreen(userName: "hellboy",),
+//          PublicBookListScreen(),
+//          UserListScreen(),
         ]
       )
     );
