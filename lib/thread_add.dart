@@ -14,8 +14,7 @@ class ThreadToAdd {
   ThreadToAdd({
     this.title, 
 //    this.message,
-    this.threadId
-  });
+    this.threadId});
 
   factory ThreadToAdd.fromJson(Map<String, dynamic> json) {
     return ThreadToAdd(
@@ -38,6 +37,7 @@ Future<ThreadToAdd> addThread(int bookISBN, int userID, String title, String mes
   var client = new BookClient();
 
 //  ThreadToAdd newThreadToAdd = new ThreadToAdd(title: title);
+
   MessageToAdd newMessageToAdd = new MessageToAdd(message: message);
 
   try {

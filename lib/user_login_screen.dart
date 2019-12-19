@@ -4,6 +4,7 @@ import 'package:bookbasket/api/client.dart';
 import 'package:bookbasket/book_list_screen.dart';
 import 'package:bookbasket/user_login.dart';
 import 'package:flushbar/flushbar.dart';
+import 'package:bookbasket/user_list_screen.dart';
 
 class UserLoginScreen extends StatefulWidget{
 
@@ -109,9 +110,9 @@ class UserLoginScreenState extends State<UserLoginScreen>{
               password: password,
             );
 
+            User result;
             try{
-              var result = await client.loginUser(userDetailToLogin);
-
+              result = await client.loginUser(userDetailToLogin);
             }
             on UserLoginException catch(e){
               print(e.errorMessage());
@@ -137,7 +138,7 @@ class UserLoginScreenState extends State<UserLoginScreen>{
 
             Navigator.of(context)
                   .push(new MaterialPageRoute<String>(
-                builder: (context) => BookListScreen(),
+                builder: (context) => BookListScreen(userName: result.userName),
               ));
           }
         },
