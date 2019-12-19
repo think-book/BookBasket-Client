@@ -37,13 +37,13 @@ Future<ThreadToAdd> addThread(int bookISBN, int userID, String title, String mes
   var client = new BookClient();
 
 //  ThreadToAdd newThreadToAdd = new ThreadToAdd(title: title);
-  MessageToAdd newMessageToAdd = new MessageToAdd(
-        message: message,
-      );
+
+  MessageToAdd newMessageToAdd = new MessageToAdd(message: message);
 
   try {
     var response1 = await client.postThread(bookISBN, title);
-    var response2 = await client.postMessage(response1.threadId, newMessageToAdd: newMessageToAdd);
+    print ("Added thread ID is " + response1.threadId.toString());
+    var response2 = await client.postMessage(response1.threadId, newMessageToAdd);
     
   } on ThreadAddException catch (e) {
     print(e.errorMessage());

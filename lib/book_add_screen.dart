@@ -135,6 +135,7 @@ class BookAddScreenState extends State<BookAddScreen> {
             padding: const EdgeInsets.symmetric(vertical: 16.0),
             child: RaisedButton(
               color: Color(0xff9b5acf),
+              textColor: Colors.white,
               onPressed: () async {
                 // Validate returns true if the form is valid, or false otherwise.
                 if (_formKey.currentState.validate()) {
