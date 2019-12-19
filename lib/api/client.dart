@@ -33,7 +33,7 @@ class BookClient {
   BookClient() {
     // Androidかそれ以外かでurlを変える
    rootURL = 'https://thinkbook.itsp.club';
-//      rootURL = 'http://localhost';
+//   rootURL = 'http://localhost';
     _client = http.Client();
   }
 
@@ -129,8 +129,8 @@ class BookClient {
   }
 
   // スレッド追加
-  Future<ThreadToAdd> postThread(int ISBN, {ThreadToAdd newThreadToAdd}) async {
-    var body = newThreadToAdd.toMap();
+  Future<ThreadToAdd> postThread(int ISBN, String title) async {
+    var body = new ThreadToAdd(title: title).toMap();
     final response = await _client
         .post(rootURL + BOOKS + '/' + ISBN.toString() + THREADS, body: body);
     // print(response.body);

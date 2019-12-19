@@ -7,13 +7,13 @@ import 'package:bookbasket/forum/message_post_exception.dart';
 class ThreadToAdd {
   // final String userId;
   final String title;
-  final String message;
+//  final String message;
 
-  int threadId = 0;
+  final int threadId;
 
   ThreadToAdd({
     this.title, 
-    this.message, 
+//    this.message,
     this.threadId});
 
   factory ThreadToAdd.fromJson(Map<String, dynamic> json) {
@@ -36,13 +36,13 @@ class ThreadToAdd {
 Future<ThreadToAdd> addThread(int bookISBN, int userID, String title, String message) async {
   var client = new BookClient();
 
-  ThreadToAdd newThreadToAdd = new ThreadToAdd(title: title, message: message);
+//  ThreadToAdd newThreadToAdd = new ThreadToAdd(title: title);
   MessageToAdd newMessageToAdd = new MessageToAdd(
         message: message,
       );
 
   try {
-    var response1 = await client.postThread(bookISBN, newThreadToAdd: newThreadToAdd);
+    var response1 = await client.postThread(bookISBN, title);
     var response2 = await client.postMessage(response1.threadId, newMessageToAdd: newMessageToAdd);
     
   } on ThreadAddException catch (e) {
