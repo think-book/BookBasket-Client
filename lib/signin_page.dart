@@ -124,33 +124,50 @@ class EmailPasswordFormState extends State<EmailPasswordForm> {
                     }
                     print(user.email);
                   } catch (e) {
-                    print(e);
-                    setState(() {
+                    print(e);   
                       Fluttertoast.showToast(
                           msg: "please enter right credentials",
                           toastLength: Toast.LENGTH_SHORT,
                           gravity: ToastGravity.CENTER,
                           backgroundColor: Color(0xFFF18287),
                           timeInSecForIos: 1);
-                    });
-      }
+                    }
                 }
               },
               child: const Text('ログイン'),
             ),
           ),
-          // Container(
-          //   alignment: Alignment.center,
-          //   padding: const EdgeInsets.symmetric(horizontal: 16),
-          //   child: Text(
-          //     _success == null
-          //         ? ''
-          //         : (_success
-          //             ? 'Successfully signed in ' + _userEmail
-          //             : 'Sign in failed'),
-          //     style: TextStyle(color: Colors.red),
-          //   ),
-          // )
+          Container(
+            padding: const EdgeInsets.symmetric(vertical: 10.0),
+            alignment: Alignment.center,
+            child: RaisedButton(
+              onPressed: () async {
+                if (_formKey.currentState.validate()) {
+                  try {
+                     FirebaseUser user = (await _auth.createUserWithEmailAndPassword(
+                      email: _emailController.text, password: _passwordController.text ))
+                     .user;
+                    if ((user != null)) {
+                      Navigator.of(context)
+                      .push(new MaterialPageRoute<String>(
+                      builder: (context) => BookListScreen(userName: user.email),
+                      ));
+                    }
+                    print(user.email);
+                  } catch (e) {
+                    print(e);   
+                      Fluttertoast.showToast(
+                          msg: "please enter right credentials",
+                          toastLength: Toast.LENGTH_SHORT,
+                          gravity: ToastGravity.CENTER,
+                          backgroundColor: Color(0xFFF18287),
+                          timeInSecForIos: 1);
+                    }
+                }
+              },
+              child: const Text('登録'),
+            ),
+          ),
         ],
       ),
     );
