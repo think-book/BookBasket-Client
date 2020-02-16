@@ -91,7 +91,7 @@ class EmailPasswordFormState extends State<EmailPasswordForm> {
             decoration: const InputDecoration(labelText: 'Email'),
             validator: (String value) {
               if (value.isEmpty) {
-                return 'Please enter some text';
+                return 'このフィールドは必須です';
               }
               return null;
             },
@@ -101,7 +101,7 @@ class EmailPasswordFormState extends State<EmailPasswordForm> {
             decoration: const InputDecoration(labelText: 'Password'),
             validator: (String value) {
               if (value.isEmpty) {
-                return 'Please enter some text';
+                return 'このフィールドは必須です';
               }
               return null;
             },
@@ -126,7 +126,7 @@ class EmailPasswordFormState extends State<EmailPasswordForm> {
                   } catch (e) {
                     print(e);   
                       Fluttertoast.showToast(
-                          msg: "please enter right credentials",
+                          msg: "ユーザー情報が違います",
                           toastLength: Toast.LENGTH_SHORT,
                           gravity: ToastGravity.CENTER,
                           backgroundColor: Color(0xFFF18287),
