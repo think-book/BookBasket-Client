@@ -6,6 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
+import 'package:bookbasket/book_list_screen.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 final GoogleSignIn _googleSignIn = GoogleSignIn();
@@ -109,7 +112,28 @@ class EmailPasswordFormState extends State<EmailPasswordForm> {
             child: RaisedButton(
               onPressed: () async {
                 if (_formKey.currentState.validate()) {
-                  _signInWithEmailAndPassword();
+                  try {
+                     FirebaseUser user = (await _auth.signInWithEmailAndPassword(
+                      email: _emailController.text, password: _passwordController.text ))
+                     .user;
+                    if ((user != null)) {
+                      Navigator.of(context)
+                      .push(new MaterialPageRoute<String>(
+                      builder: (context) => BookListScreen(userName: user.email),
+                      ));
+                    }
+                    print(user.email);
+                  } catch (e) {
+                    print(e);
+                    setState(() {
+                      Fluttertoast.showToast(
+                          msg: "please enter right credentials",
+                          toastLength: Toast.LENGTH_SHORT,
+                          gravity: ToastGravity.CENTER,
+                          backgroundColor: Color(0xFFF18287),
+                          timeInSecForIos: 1);
+                    });
+      }
                 }
               },
               child: const Text('ログイン'),
