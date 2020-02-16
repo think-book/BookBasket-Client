@@ -3,8 +3,27 @@
 <head>
   <meta charset="UTF-8">
   <title></title>
-  <script defer src="main.dart.js" type="application/javascript"></script>
 </head>
 <body>
+  <script src="https://www.gstatic.com/firebasejs/7.5.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.5.0/firebase-auth.js"></script>
+  <!-- Other firebase SDKs/config here -->
+  <script>
+    // TODO: Replace the following with your app's Firebase project configuration.
+    // See: https://support.google.com/firebase/answer/7015592
+    var firebaseConfig = {
+      apiKey: "AIzaSyDB3JKB2Yt3ol_k5X3hy4bVKo-v-pJEi6Y",
+      authDomain: "thinkbookbasket.firebaseapp.com",
+      databaseURL: "https://thinkbookbasket.firebaseio.com",
+      projectId: "thinkbookbasket",
+      storageBucket: "thinkbookbasket.appspot.com",
+      messagingSenderId: "888558388973",
+      appId: "1:888558388973:web:015678ff8716a69bebaee4",
+      measurementId: "G-63K11221GE"
+    };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig, "Hello app");
+  </script>
+  <script src="main.dart.js"></script>
 </body>
 </html>
